@@ -6,7 +6,7 @@ const App = () => {
   const userId = tg.initDataUnsafe.user.id;
   
   useEffect(() => {
-    tg.ready();
+    tg.init();
   })
 
   return (
