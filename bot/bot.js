@@ -1,10 +1,11 @@
 const { Telegraf } = require('telegraf')
 
-const bot = new Telegraf(process.env.BOT_TOKEN)
-bot.start((ctx) => ctx.reply({
-  text: "Test web_app",
-  web_app: {
-      url: "https://revenkroz.github.io/telegram-web-app-bot-example/index.html"
+const bot = new Telegraf('')
+bot.start((ctx) => ctx.reply('start',{
+  reply_markup: {
+    keyboard: [
+      [{ text: "webapp", web_app:{url: "https://cargo-auction.vercel.app"} }]
+    ]
   }
 }))
 bot.launch()
