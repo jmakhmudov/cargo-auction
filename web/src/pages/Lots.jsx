@@ -1,11 +1,11 @@
 import LotCard from "../components/LotCard/LotCard";
+import PageTemplate from "../templates/PageTemplate";
 
 const Lots = () => {
   return (
-    <>
-      <h1>Актуальные лоты</h1>
-      <LotCard />
-    </>
+    <PageTemplate title="Актуальные лоты">
+
+    </PageTemplate>
   );
 };
 

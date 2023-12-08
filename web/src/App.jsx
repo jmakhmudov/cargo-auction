@@ -1,20 +1,25 @@
-import Lots from "./pages/Lots";
 import { useSnapshot } from "valtio";
 import state from "./store";
 import { pages } from "./pages";
+import Navbar from "./components/ui/Navbar/Navbar";
 
 const App = () => {
   const snap = useSnapshot(state);
 
   return (
-    <>
-      {pages[snap.currentPage]}
-      {snap.userData.id}
-      {snap.userData.username}
+    <main>
+      <div className="font-bold text-lg">
+        ID <span>{snap.userData.id}</span>
+      </div>
 
-      <button className="block" onClick={() => state.currentPage='SoldLots'}>Sold</button>
-      <button className="block" onClick={() => state.currentPage='Lots'}>Lots</button>
-    </>
+      <div
+        className="pt-4"
+      >
+        {pages[snap.currentPage]}
+      </div>
+
+      <Navbar />
+    </main>
   );
 };
 

@@ -1,7 +1,10 @@
+import PageTemplate from "../templates/PageTemplate";
 
 const SoldLots = () => {
   return (
-    <div>SoldLots</div>
+    <PageTemplate title="История торгов">
+      История
+    </PageTemplate>
   )
 }
 
