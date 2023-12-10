@@ -4,7 +4,7 @@ const PageTemplate = ({ title, children }) => {
   return (
     <div>
       <h1
-        className="pb-2"
+        className="pb-6"
       >{title}</h1>
 
       {children}

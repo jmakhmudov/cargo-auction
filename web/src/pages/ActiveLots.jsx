@@ -9,9 +9,14 @@ const ActiveLots = () => {
 
   return (
     <PageTemplate title="Актуальные лоты">
-      {snap.lots.map((lot, idx) => (
-        <LotCard key={idx} lot={lot}/>
-      ))}
+      <div className="grid gap-6">
+        {snap.lots.map((lot, idx) => (
+          <div key={lot.id}>
+            <LotCard lot={lot} />
+            {idx+1 !== snap.lots.length ? <hr className="mt-6" /> : <></>}
+          </div>
+        ))}
+      </div>
     </PageTemplate>
   );
 };

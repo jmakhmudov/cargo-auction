@@ -3,7 +3,7 @@ import Badge from "../ui/badge";
 
 const LotCard = ({ lot }) => {
   return (
-    <div>
+    <div className="grid gap-4">
       <section
         className=" flex items-center justify-between"
       >
