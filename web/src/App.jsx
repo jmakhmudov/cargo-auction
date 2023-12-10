@@ -1,15 +1,20 @@
+import Navbar from "./components/Navbar";
+import { MdOutlineAccountCircle } from "react-icons/md";
+
 import { useSnapshot } from "valtio";
 import state from "./store";
 import { pages } from "./pages";
-import Navbar from "./components/ui/Navbar/Navbar";
 
 const App = () => {
   const snap = useSnapshot(state);
 
   return (
     <main>
-      <div className="font-bold text-lg">
-        ID <span>{snap.userData.id}</span>
+      <div className="font-bold text-lg flex gap-1 items-center justify-center">
+        <MdOutlineAccountCircle size={30} />
+        <div>
+          ID <span>{snap.userData.id}</span>
+        </div>
       </div>
 
       <div

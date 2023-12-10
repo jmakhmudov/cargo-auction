@@ -1,5 +1,5 @@
 import { useSnapshot } from "valtio";
-import state from "../../../store";
+import state from "../../store";
 import { FiBox } from "react-icons/fi";
 import { FiCheckSquare } from "react-icons/fi";
 
@@ -17,8 +17,8 @@ const Navbar = () => {
       <FiBox 
         size={30} 
         color="white" 
-        className={`${setActiveBtn('Lots')} cursor-pointer`} 
-        onClick={() => state.currentPage = 'Lots'}
+        className={`${setActiveBtn('ActiveLots')} cursor-pointer`} 
+        onClick={() => state.currentPage = 'ActiveLots'}
       />
       <FiCheckSquare 
         size={30} 

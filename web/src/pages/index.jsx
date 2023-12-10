@@ -1,11 +1,11 @@
-import Lots from "./Lots";
+import ActiveLots from "./ActiveLots";
 import SoldLots from "./SoldLots";
 
-const lotsPage = () => (<Lots />)
+const activeLotsPage = () => (<ActiveLots />)
 
 const soldLotsPage = () => (<SoldLots />)
 
 export const pages = {
-  'Lots': lotsPage(),
+  'ActiveLots': activeLotsPage(),
   'SoldLots': soldLotsPage(),
 }
