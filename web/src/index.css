@@ -7,11 +7,12 @@
   padding: 0;
   box-sizing: border-box;
   font-family: "Inter" sans-serif;
+  outline: none;
 }
 
 body {
   background-color: white;
-  @apply px-4 py-4;
+  @apply p-4;
 }
 
 h1 {

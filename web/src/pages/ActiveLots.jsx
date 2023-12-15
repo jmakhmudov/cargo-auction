@@ -9,7 +9,7 @@ const ActiveLots = () => {
 
   return (
     <PageTemplate title="Актуальные лоты">
-      <div className="grid gap-6">
+      <div className="grid gap-6 pb-20">
         {snap.lots.map((lot, idx) => (
           <div key={lot.id}>
             <LotCard lot={lot} />
