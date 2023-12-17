@@ -1,6 +1,7 @@
 import { FiArrowRightCircle } from "react-icons/fi";
 import Badge from "../ui/badge";
 import Location from "../ui/location";
+import state from "../../store";
 
 const LotCard = ({ lot }) => {
   return (
@@ -18,14 +19,14 @@ const LotCard = ({ lot }) => {
           </div>
         </div>
 
-        <div>
+        <div className="text-sm font-medium">
           осталось 2 дня
         </div>
       </section>
 
       <section className="grid gap-2">
         <section className="flex item-center gap-2">
-          <Badge title={"10 дней"} type="days" />
+          <Badge title={`10 дней`} type="days" />
           <Badge title={"Опасный"} type="danger" />
         </section>
 
@@ -38,19 +39,22 @@ const LotCard = ({ lot }) => {
 
 
       <section className="flex items-center justify-between">
-        <div className="text-black font-medium">
+        <div className="text-black font-normal text-sm">
           Текущая ставка
-          <div className="font-bold text-3xl">
+          <div className="font-bold text-2xl">
             {lot.last_bet_id.amount.toLocaleString('en-US', { minimumFractionDigits: 0 })} {lot.parameters_id.currency}
           </div>
         </div>
 
         <FiArrowRightCircle
-          size={50}
+          size={40}
           color="#3476AB"
-          strokeWidth={1.5}
+          strokeWidth={1}
           className="cursor-pointer"
-          onClick={() => { }}
+          onClick={() => {
+            state.currentPage = 'LotInfo';
+            state.currentLot = lot;
+          }}
         />
       </section>
     </div>

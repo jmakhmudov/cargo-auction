@@ -7,7 +7,7 @@ const iconColor = {
 
 const Location = ({type, location}) => {
   return (
-    <div className="flex gap-1 items-center text-sm font-medium">
+    <div className="flex gap-1 items-center text-sm font-medium ">
       <FaLocationDot color={iconColor[type]} />
       {location}
     </div>

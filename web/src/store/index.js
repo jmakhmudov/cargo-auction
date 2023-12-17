@@ -126,7 +126,8 @@ const state = proxy({
     },
   ],
   soldLots: [],
-  currentPage: 'ActiveLots'
+  currentPage: 'ActiveLots',
+  currentLot: undefined,
 });
 
 export default state;
