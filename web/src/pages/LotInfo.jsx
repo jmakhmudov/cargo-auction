@@ -33,22 +33,22 @@ const LotInfo = () => {
       <section className="grid gap-1 mt-4">
         <Location
           type='departure'
-          location={lot.parameters_id.departure}
+          location={lot.parameters.departure}
         />
         <Location
           type='destination'
-          location={lot.parameters_id.destination}
+          location={lot.parameters.destination}
         />
       </section>
 
       <div className="text-black font-normal text-sm my-4">
         Текущая ставка
         <div className="font-bold text-2xl">
-          {lot.last_bet_id.amount.toLocaleString(
+          {lot.last_bet.amount.toLocaleString(
             'en-US',
             { minimumFractionDigits: 0 }
           )}
-          {lot.parameters_id.currency}
+          {lot.parameters.currency}
         </div>
       </div>
 
@@ -56,9 +56,9 @@ const LotInfo = () => {
         <div className="flex items-center gap-2 font-medium">
           <input
             type="number"
-            placeholder={`Сумма в ${lot.parameters_id.currency}*`}
+            placeholder={`Сумма в ${lot.parameters.currency}*`}
             className="font-normal"
-            min={lot.last_bet_id.amount + 1}
+            min={lot.last_bet.amount + 1}
             onChange={(e) => setBetData(prevState => {
               return {
                 ...prevState,
@@ -66,7 +66,7 @@ const LotInfo = () => {
               }
             })}
           />
-          {lot.parameters_id.currency}
+          {lot.parameters.currency}
         </div>
 
         <input
@@ -96,36 +96,36 @@ const LotInfo = () => {
           {lot.start_date}
         </Parameter>
         <Parameter title="Срок доставки:">
-          {lot.parameters_id.delivery_time}
+          {lot.parameters.delivery_time}
         </Parameter>
         <Parameter title="Обьем:">
-          {lot.parameters_id.volume} м3
+          {lot.parameters.volume} м3
         </Parameter>
         <Parameter title="Тип груза:">
-          {lot.parameters_id.is_danger ? "Опасный" : "Непопасный"}
+          {lot.parameters.is_danger ? "Опасный" : "Непопасный"}
         </Parameter>
         <Parameter title="Срок доставки:">
-          {lot.parameters_id.delivery_time} дней
+          {lot.parameters.delivery_time} дней
         </Parameter>
         <Parameter title="Начальная ставка:">
-          {lot.parameters_id.initial_bet} {lot.parameters_id.currency}
+          {lot.parameters.initial_bet} {lot.parameters.currency}
         </Parameter>
         <Parameter title="Валюта:">
-          {lot.parameters_id.currency}
+          {lot.parameters.currency}
         </Parameter>
         <Parameter title="Кол-во ставок:">
-          {lot.bets_id.length}
+          {lot.bets.length}
         </Parameter>
       </section>
 
       <section className="mt-2">
         <div className="text-sm text-gray">Условия транспортировки</div>
-        <p>{lot.parameters_id.conditions}</p>
+        <p>{lot.parameters.conditions}</p>
       </section>
 
       <section className="mt-6">
         <div className="text-sm text-gray">Описание</div>
-        <p>{lot.parameters_id.description}</p>
+        <p>{lot.parameters.description}</p>
       </section>
 
     </PageTemplate>

@@ -31,8 +31,8 @@ const LotCard = ({ lot }) => {
         </section>
 
         <section className="grid gap-1">
-          <Location type='departure' location={lot.parameters_id.departure} />
-          <Location type='destination' location={lot.parameters_id.destination} />
+          <Location type='departure' location={lot.parameters.departure} />
+          <Location type='destination' location={lot.parameters.destination} />
         </section>
       </section>
 
@@ -42,7 +42,7 @@ const LotCard = ({ lot }) => {
         <div className="text-black font-normal text-sm">
           Текущая ставка
           <div className="font-bold text-2xl">
-            {lot.last_bet_id.amount.toLocaleString('en-US', { minimumFractionDigits: 0 })} {lot.parameters_id.currency}
+            {lot.last_bet.amount.toLocaleString('en-US', { minimumFractionDigits: 0 })} {lot.parameters.currency}
           </div>
         </div>
 
