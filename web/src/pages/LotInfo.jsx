@@ -22,8 +22,8 @@ const LotInfo = () => {
     <PageTemplate title={`Информация о лоте`}>
       <div>
         <h2 className="text-2xl font-medium">
-          Лот <span className="font-bold">#{lot.id}
-          </span></h2>
+          Лот <span className="font-bold">#{lot.id}</span>
+        </h2>
 
         <div className="text-sm">
           {lot.start_date.substring(0, 10)}
@@ -31,14 +31,24 @@ const LotInfo = () => {
       </div>
 
       <section className="grid gap-1 mt-4">
-        <Location type='departure' location={lot.parameters_id.departure} />
-        <Location type='destination' location={lot.parameters_id.destination} />
+        <Location
+          type='departure'
+          location={lot.parameters_id.departure}
+        />
+        <Location
+          type='destination'
+          location={lot.parameters_id.destination}
+        />
       </section>
 
       <div className="text-black font-normal text-sm my-4">
         Текущая ставка
         <div className="font-bold text-2xl">
-          {lot.last_bet_id.amount.toLocaleString('en-US', { minimumFractionDigits: 0 })} {lot.parameters_id.currency}
+          {lot.last_bet_id.amount.toLocaleString(
+            'en-US',
+            { minimumFractionDigits: 0 }
+          )}
+          {lot.parameters_id.currency}
         </div>
       </div>
 
@@ -108,6 +118,15 @@ const LotInfo = () => {
         </Parameter>
       </section>
 
+      <section className="mt-2">
+        <div className="text-sm text-gray">Условия транспортировки</div>
+        <p>{lot.parameters_id.conditions}</p>
+      </section>
+
+      <section className="mt-6">
+        <div className="text-sm text-gray">Описание</div>
+        <p>{lot.parameters_id.description}</p>
+      </section>
 
     </PageTemplate>
   )
