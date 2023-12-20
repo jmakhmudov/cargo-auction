@@ -7,7 +7,7 @@ const state = proxy({
   lots: [
     {
       id: 2391,
-      bets_id: [
+      bets: [
         {
           id: 1,
           amount: 100,
@@ -23,7 +23,7 @@ const state = proxy({
           created_at: "2023-12-08T00:00:00.000Z",
         },
       ],
-      parameters_id: {
+      parameters: {
         departure: "Moscow",
         destination: "St. Petersburg",
         volume: 10,
@@ -37,7 +37,7 @@ const state = proxy({
       },
       start_date: "2023-12-08T00:00:00.000Z",
       finish_date: "2023-12-10T00:00:00.000Z",
-      last_bet_id: {
+      last_bet: {
         id: 2,
         amount: 200000,
         comment: "This is the second bet for shipment 1",
@@ -49,7 +49,7 @@ const state = proxy({
     },
     {
       id: 8923,
-      bets_id: [
+      bets: [
         {
           id: 3,
           amount: 300,
@@ -58,7 +58,7 @@ const state = proxy({
           created_at: "2023-12-09T00:00:00.000Z",
         },
       ],
-      parameters_id: {
+      parameters: {
         departure: "London",
         destination: "Paris",
         volume: 5,
@@ -72,7 +72,7 @@ const state = proxy({
       },
       start_date: "2023-12-09T00:00:00.000Z",
       finish_date: "2023-12-11T00:00:00.000Z",
-      last_bet_id: {
+      last_bet: {
         id: 3,
         amount: 300,
         comment: "This is the first bet for shipment 2",
@@ -84,7 +84,7 @@ const state = proxy({
     },
     {
       id: 4854,
-      bets_id: [
+      bets: [
         {
           id: 1,
           amount: 100,
@@ -100,7 +100,7 @@ const state = proxy({
           created_at: "2023-12-08T00:00:00.000Z",
         },
       ],
-      parameters_id: {
+      parameters: {
         departure: "Moscow",
         destination: "St. Petersburg",
         volume: 10,
@@ -114,7 +114,7 @@ const state = proxy({
       },
       start_date: "2023-12-08T00:00:00.000Z",
       finish_date: "2023-12-10T00:00:00.000Z",
-      last_bet_id: {
+      last_bet: {
         id: 2,
         amount: 200,
         comment: "This is the second bet for shipment 1",

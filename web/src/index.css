@@ -26,3 +26,9 @@ span {
 hr {
   @apply opacity-25;
 }
+
+input {
+  border: 1px solid rgba(0, 0, 0, 0.336);
+  width: 100%;
+  @apply rounded-md p-2 pl-2 text-sm;
+}
