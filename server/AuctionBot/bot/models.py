@@ -1,59 +1,68 @@
 from django.db import models
+from django.contrib.auth.models import User
 
-class User(models.Model):
-    id = models.AutoField(primary_key=True)
-    role = models.IntegerField()
-    status = models.BooleanField()
 
-    def __str__(self):
-        return f"{self.id}, {self.role}"
+class CustomUser(User):
     class Meta:
-        verbose_name = "Пользователь"
-        verbose_name_plural = "Пользователи"
+        proxy = True
+        app_label = 'auth'
+        verbose_name_plural = ('Админы')
 
-class Bet(models.Model):
-    id = models.AutoField(primary_key=True)
-    amount = models.FloatField()
-    comment = models.TextField()
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    date_time = models.IntegerField()
-    def __str__(self):
-        return f"{self.id}, {self.role}"
+
+class TgUser(models.Model):
+    id = models.IntegerField(primary_key=True)
+    name = models.CharField(max_length=255, verbose_name='Имя')
+    telephone_num = models.CharField(max_length=20, verbose_name='Номер телефона')
+    email = models.EmailField()
+    comp_name = models.CharField(max_length=255, verbose_name='Название компании')
+    job_title = models.CharField(max_length=255, verbose_name='Должность')
+    comment = models.TextField(verbose_name='Комментарий')
+    status = models.BooleanField(verbose_name='Подтвержден')
+
     class Meta:
-        verbose_name = "Ставка"
-        verbose_name_plural = "Ставки"
+        verbose_name = ''
+        verbose_name_plural = 'Пользователи'
+
 
 class Lot(models.Model):
     id = models.AutoField(primary_key=True)
-    parameters = models.ForeignKey('Parameters', on_delete=models.CASCADE)
-    bets = models.ManyToManyField(Bet)
-    start_date = models.IntegerField()
-    finish_date = models.IntegerField()
-    last_bet_id = models.FloatField()
-    created_at = models.IntegerField()
-    created_by = models.IntegerField()
-    def __str__(self):
-        return f"{self.id}, {self.role}"
+    start_date = models.DateTimeField(verbose_name='Начало')
+    finish_date = models.DateTimeField(verbose_name='Конец')
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Создан')
+    # created_by = models.IntegerField()
     class Meta:
-        verbose_name = "Лот"
-        verbose_name_plural = "Лоты"
+        verbose_name = ''
+        verbose_name_plural = 'Лоты'
+
+
+class Bet(models.Model):
+    id = models.AutoField(primary_key=True)
+    amount = models.FloatField(verbose_name='Сумма')
+    comment = models.TextField(verbose_name='Комментарий')
+    user = models.ForeignKey(TgUser, on_delete=models.CASCADE, verbose_name='Пользователь')
+    lot = models.ForeignKey(Lot, related_name='bets', on_delete=models.CASCADE, default=0, verbose_name='Лот')
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Создан')
+
+    class Meta:
+        verbose_name = ''
+        verbose_name_plural = 'Ставки'
+
 
 class Parameters(models.Model):
     id = models.AutoField(primary_key=True)
-    departure = models.TextField()
-    destination = models.TextField()
-    volume = models.FloatField()
-    weight = models.FloatField()
-    is_danger = models.BooleanField()
-    description = models.TextField()
-    conditions = models.CharField(max_length=255)
-    initial_bet = models.FloatField()
-    currency = models.IntegerField()
-    del_time = models.IntegerField()
-    created_at = models.IntegerField()
+    description = models.TextField(verbose_name='Описание')
+    departure = models.TextField(verbose_name='Откуда')
+    destination = models.TextField(verbose_name='Куда')
+    del_time = models.DateTimeField(verbose_name='Срок доставки (Дни)')
+    volume = models.FloatField(verbose_name='Объем (куб.м)')
+    weight = models.FloatField(verbose_name='Вес (кг)')
+    is_danger = models.BooleanField(verbose_name='Опасен')
+    conditions = models.TextField(verbose_name='Условия транспортировки')
+    initial_bet = models.FloatField(verbose_name='Начальная ставка')
+    currency = models.IntegerField(verbose_name='Валюта')
+    lot = models.ForeignKey(Lot, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Создан')
 
-    def __str__(self):
-        return f"{self.id}, {self.role}"
     class Meta:
-        verbose_name = "Параметры"
-        verbose_name_plural = "Параметры"
+        verbose_name = ''
+        verbose_name_plural = 'Параметры'
