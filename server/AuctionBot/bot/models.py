@@ -12,12 +12,12 @@ class CustomUser(User):
 
 class TgUser(models.Model):
     id = models.IntegerField(primary_key=True)
-    name = models.CharField(max_length=255, verbose_name='Имя')
+    name = models.CharField(max_length=255, verbose_name='ФИО')
     telephone_num = models.CharField(max_length=20, verbose_name='Номер телефона')
     email = models.EmailField()
     comp_name = models.CharField(max_length=255, verbose_name='Название компании')
     job_title = models.CharField(max_length=255, verbose_name='Должность')
-    comment = models.TextField(verbose_name='Комментарий')
+    comment = models.TextField(verbose_name='Комментарий', null=True, blank=True)
     status = models.BooleanField(verbose_name='Подтвержден')
 
     class Meta:
@@ -31,6 +31,7 @@ class Lot(models.Model):
     finish_date = models.DateTimeField(verbose_name='Конец')
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Создан')
     # created_by = models.IntegerField()
+
     class Meta:
         verbose_name = ' '
         verbose_name_plural = 'Лоты'
@@ -39,7 +40,7 @@ class Lot(models.Model):
 class Bet(models.Model):
     id = models.AutoField(primary_key=True)
     amount = models.FloatField(verbose_name='Сумма')
-    comment = models.TextField(verbose_name='Комментарий')
+    comment = models.TextField(verbose_name='Комментарий', null=True, blank=True)
     user = models.ForeignKey(TgUser, on_delete=models.CASCADE, verbose_name='Пользователь')
     lot = models.ForeignKey(Lot, related_name='bets', on_delete=models.CASCADE, default=0, verbose_name='Лот')
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Создан')
@@ -50,6 +51,10 @@ class Bet(models.Model):
 
 
 class Parameters(models.Model):
+
+    currency = {
+
+    }
     USD = 'USD'
     EUR = 'EUR'
     RUB = 'RUB'

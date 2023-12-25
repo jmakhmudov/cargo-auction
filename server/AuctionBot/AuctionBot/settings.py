@@ -1,7 +1,7 @@
 from pathlib import Path
 import os
 from dotenv import load_dotenv, find_dotenv
-from .jazzmin import JAZZMIN_SETTINGS
+
 # load of .env file using find_dotenv()
 load_dotenv(find_dotenv())
 
@@ -22,7 +22,6 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
-    'jazzmin',  #custom aadmin panel
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -30,6 +29,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'bot',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -112,4 +112,4 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-JAZZMIN_SETTINGS = JAZZMIN_SETTINGS
+
