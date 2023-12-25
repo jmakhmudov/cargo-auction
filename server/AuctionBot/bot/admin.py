@@ -31,15 +31,18 @@ class BetAdmin(admin.ModelAdmin):
     list_display_links = ('id',)
     list_filter = ('lot',)
     search_fields = ('id', 'lot', 'user',)
+    # http: // 127.0
+    # .0
+    # .1: 8000 / admin / bot / bet /
+    # / admin / bot / tguser / 76543 / change /?_to_field = id
+    def view_users_link(self, obj):
+        user = obj.user
+        url = (
+                reverse("admin:/bot/") + "?" + urlencode({"user__id": f"{user.id}"})
+        )
+        return format_html(f'<a href="{url}">{user.id} TgUser</a>', url, user)
 
-    # def view_users_link(self, obj):
-    #     user = obj.user
-    #     url = (
-    #             reverse("admin:/bot/bet/") + "?" + urlencode({"user__id": f"{user.id}"})
-    #     )
-    #     return format_html(f'<a href="{url}">{user.id} TgUser</a>', url, user)
-    #
-    # view_users_link.short_description = "TgUser"
+    view_users_link.short_description = "TgUser"
 
 
 # class ParametersAdmin(admin.ModelAdmin):
