@@ -6,6 +6,7 @@ class CustomUser(User):
     class Meta:
         proxy = True
         app_label = 'auth'
+        verbose_name = (' ')
         verbose_name_plural = ('Админы')
 
 
@@ -20,7 +21,7 @@ class TgUser(models.Model):
     status = models.BooleanField(verbose_name='Подтвержден')
 
     class Meta:
-        verbose_name = ''
+        verbose_name = ' '
         verbose_name_plural = 'Пользователи'
 
 
@@ -31,7 +32,7 @@ class Lot(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Создан')
     # created_by = models.IntegerField()
     class Meta:
-        verbose_name = ''
+        verbose_name = ' '
         verbose_name_plural = 'Лоты'
 
 
@@ -44,25 +45,39 @@ class Bet(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Создан')
 
     class Meta:
-        verbose_name = ''
+        verbose_name = ' '
         verbose_name_plural = 'Ставки'
 
 
 class Parameters(models.Model):
+    USD = 'USD'
+    EUR = 'EUR'
+    RUB = 'RUB'
+    UZS = 'UZS'
+    GBP = 'GBP'
+    JPY = 'JPY'
+    CURRENCY_CHOICES = [
+        (USD, 'Доллары'),
+        (EUR, 'Евро'),
+        (UZS, 'Сум'),
+        (RUB, 'Рубли'),
+        (GBP, 'Фунт стерлингов'),
+        (JPY, 'Японская иена'),
+    ]
     id = models.AutoField(primary_key=True)
     description = models.TextField(verbose_name='Описание')
     departure = models.TextField(verbose_name='Откуда')
     destination = models.TextField(verbose_name='Куда')
-    del_time = models.DateTimeField(verbose_name='Срок доставки (Дни)')
+    del_time = models.IntegerField(verbose_name='Срок доставки (Дни)')
     volume = models.FloatField(verbose_name='Объем (куб.м)')
     weight = models.FloatField(verbose_name='Вес (кг)')
     is_danger = models.BooleanField(verbose_name='Опасен')
     conditions = models.TextField(verbose_name='Условия транспортировки')
     initial_bet = models.FloatField(verbose_name='Начальная ставка')
-    currency = models.IntegerField(verbose_name='Валюта')
+    currency = models.CharField(max_length=3, choices=CURRENCY_CHOICES, verbose_name='Валюта')
     lot = models.ForeignKey(Lot, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Создан')
 
     class Meta:
-        verbose_name = ''
+        verbose_name = ' '
         verbose_name_plural = 'Параметры'
