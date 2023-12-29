@@ -1,27 +1,31 @@
 from .models import Lot, Bet, Parameters
+from .serializers import (LotSerializer, BetSerializer,ParametersSerializer, TgUserSerializer)
+
 from rest_framework import viewsets, permissions
-from .serializers import (LotSerializer, BetSerializer, ParametersSerializer)
+from rest_framework import generics
+from rest_framework.response import Response
+
+from django.utils import timezone
 
 
-class LotViewSet(viewsets.ModelViewSet):
-    queryset = Lot.objects.all()
-    permissions_classes = [
-        permissions.AllowAny
-    ]
+class TgUserCreateView(generics.CreateAPIView):
+    serializer_class = TgUserSerializer
+
+
+class LotView(generics.RetrieveAPIView):
+    queryset = Lot.objects.filter(finish_date__gte=timezone.now())
     serializer_class = LotSerializer
 
 
-class BetViewSet(viewsets.ModelViewSet):
-    queryset = Bet.objects.all()
-    permissions_classes = [
-        permissions.AllowAny
-    ]
-    serializer_class = BetSerializer
+class LotList(generics.ListAPIView):
+    queryset = Lot.objects.filter(finish_date__gte=timezone.now())
+    serializer_class = LotSerializer
 
 
-class ParametersViewSet(viewsets.ModelViewSet):
+class ParametersView(generics.ListAPIView):
     queryset = Parameters.objects.all()
-    permissions_classes = [
-        permissions.AllowAny
-    ]
     serializer_class = ParametersSerializer
+
+
+class BetCreateView(generics.CreateAPIView):
+    serializer_class = BetSerializer

@@ -47,10 +47,10 @@ class BetAdmin(admin.ModelAdmin):
 # class ParametersAdmin(admin.ModelAdmin):
 #     list_display = ('id', 'description', 'departure', 'destination', 'initial_bet', 'del_time')
 
-class ParametersInline(admin.StackedInline):
-    model = Parameters
-    extra = 0
-    max_num = 1
+# class ParametersInline(admin.StackedInline):
+#     model = Parameters
+#     extra = 0
+#     max_num = 1
 
 
 @admin.register(Lot)
@@ -58,5 +58,5 @@ class LotAdmin(admin.ModelAdmin):
 
     list_display = ('id', 'start_date', 'finish_date',)
     model = Lot
-    inlines = [ParametersInline]
+    # inlines = [ParametersInline]
     search_fields = ('id',)

@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-
+from django.utils import timezone
 
 class CustomUser(User):
     class Meta:
@@ -25,36 +25,9 @@ class TgUser(models.Model):
         verbose_name_plural = 'Пользователи'
 
 
-class Lot(models.Model):
-    id = models.AutoField(primary_key=True)
-    start_date = models.DateTimeField(verbose_name='Начало')
-    finish_date = models.DateTimeField(verbose_name='Конец')
-    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Создан')
-    # created_by = models.IntegerField()
-
-    class Meta:
-        verbose_name = ' '
-        verbose_name_plural = 'Лоты'
-
-
-class Bet(models.Model):
-    id = models.AutoField(primary_key=True)
-    amount = models.FloatField(verbose_name='Сумма')
-    comment = models.TextField(verbose_name='Комментарий', null=True, blank=True)
-    user = models.ForeignKey(TgUser, on_delete=models.CASCADE, verbose_name='Пользователь')
-    lot = models.ForeignKey(Lot, related_name='bets', on_delete=models.CASCADE, default=0, verbose_name='Лот')
-    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Создан')
-
-    class Meta:
-        verbose_name = ' '
-        verbose_name_plural = 'Ставки'
-
 
 class Parameters(models.Model):
 
-    currency = {
-
-    }
     USD = 'USD'
     EUR = 'EUR'
     RUB = 'RUB'
@@ -80,9 +53,39 @@ class Parameters(models.Model):
     conditions = models.TextField(verbose_name='Условия транспортировки')
     initial_bet = models.FloatField(verbose_name='Начальная ставка')
     currency = models.CharField(max_length=3, choices=CURRENCY_CHOICES, verbose_name='Валюта')
-    lot = models.ForeignKey(Lot, on_delete=models.CASCADE)
+    # lot = models.ForeignKey(Lot, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Создан')
 
     class Meta:
         verbose_name = ' '
         verbose_name_plural = 'Параметры'
+
+
+class Lot(models.Model):
+    id = models.AutoField(primary_key=True)
+    start_date = models.DateTimeField(verbose_name='Начало')
+    finish_date = models.DateTimeField(verbose_name='Конец')
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Создан')
+    parameters = models.ForeignKey(Parameters, on_delete=models.CASCADE, verbose_name='Параметры',default=1)
+    # created_by = models.IntegerField()
+
+    def finish_date__gte(self):
+        return self.finish_date >= timezone.now()
+    class Meta:
+        verbose_name = ' '
+        verbose_name_plural = 'Лоты'
+
+
+class Bet(models.Model):
+    id = models.AutoField(primary_key=True)
+    amount = models.FloatField(verbose_name='Сумма')
+    comment = models.TextField(verbose_name='Комментарий', null=True, blank=True)
+    user = models.ForeignKey(TgUser, on_delete=models.CASCADE, verbose_name='Пользователь')
+    lot = models.ForeignKey(Lot, related_name='bets', on_delete=models.CASCADE, default=0, verbose_name='Лот')
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Создан')
+
+    class Meta:
+        verbose_name = ' '
+        verbose_name_plural = 'Ставки'
+
+
