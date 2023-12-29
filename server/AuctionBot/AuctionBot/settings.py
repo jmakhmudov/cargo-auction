@@ -118,7 +118,7 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.JSONRenderer',
     ),
 }
-CORS_ORIGIN_WHITELIST = [
+CORS_ORIGIN_ORIGINS = [
     "https://9tn23j-34391.csb.app",
     "http://localhost:8080",
     "http://127.0.0.1:8080",
