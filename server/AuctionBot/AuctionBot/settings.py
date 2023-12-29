@@ -113,7 +113,12 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-CORS_ALLOWED_ORIGINS = [
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+    ),
+}
+CORS_ORIGIN_WHITELIST = [
     "https://9tn23j-34391.csb.app",
     "http://localhost:8080",
     "http://127.0.0.1:8080",
