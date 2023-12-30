@@ -44,7 +44,7 @@ const LotInfo = () => {
       <div className="text-black font-normal text-sm my-4">
         Текущая ставка
         <div className="font-bold text-2xl">
-          {lot.last_bet.amount.toLocaleString(
+          {'1000'.toLocaleString(
             'en-US',
             { minimumFractionDigits: 0 }
           )}
@@ -58,7 +58,7 @@ const LotInfo = () => {
             type="number"
             placeholder={`Сумма в ${lot.parameters.currency}*`}
             className="font-normal"
-            min={lot.last_bet.amount + 1}
+            min={'1000' + 1}
             onChange={(e) => setBetData(prevState => {
               return {
                 ...prevState,
@@ -114,7 +114,7 @@ const LotInfo = () => {
           {lot.parameters.currency}
         </Parameter>
         <Parameter title="Кол-во ставок:">
-          {lot.bets.length}
+          
         </Parameter>
       </section>
 
