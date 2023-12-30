@@ -1,7 +1,7 @@
 from pathlib import Path
 import os
 from dotenv import load_dotenv, find_dotenv
-from .jazzmin import JAZZMIN_SETTINGS
+
 # load of .env file using find_dotenv()
 load_dotenv(find_dotenv())
 
@@ -15,14 +15,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('DEBUG')
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
 # Application definition
 
 INSTALLED_APPS = [
-    'jazzmin',  #custom aadmin panel
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -30,6 +29,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'bot',
+    'rest_framework',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -40,6 +41,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'AuctionBot.urls'
@@ -111,5 +113,26 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# REST_FRAMEWORK = {
+#     'DEFAULT_RENDERER_CLASSES': (
+#         'rest_framework.renderers.JSONRenderer',
+#     ),
+# }
+CORS_ORIGIN_ORIGINS = [
+    "https://9tn23j-34391.csb.app",
+    "http://localhost:8080",
+    "http://127.0.0.1:8080",
+    "https://cargo-auction.vercel.app",
+]
+CORS_ALLOW_METHODS = [
+    'GET',
+    'POST',
+    'PUT',
+    'PATCH',
+    'DELETE',
+    'OPTIONS'
+]
 
-JAZZMIN_SETTINGS = JAZZMIN_SETTINGS
+CORS_ALLOW_HEADERS = ['*']  # Allow all headers
+
+CORS_ALLOW_CREDENTIALS = True
