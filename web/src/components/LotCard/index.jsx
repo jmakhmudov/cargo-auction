@@ -42,7 +42,7 @@ const LotCard = ({ lot }) => {
         <div className="text-black font-normal text-sm">
           Текущая ставка
           <div className="font-bold text-2xl">
-            {lot.last_bet.amount.toLocaleString('en-US', { minimumFractionDigits: 0 })} {lot.parameters.currency}
+            {'1000'.toLocaleString('en-US', { minimumFractionDigits: 0 })} {lot.parameters.currency}
           </div>
         </div>
 

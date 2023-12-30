@@ -3,7 +3,9 @@ import { MdOutlineAccountCircle } from "react-icons/md";
 
 import { useSnapshot } from "valtio";
 import state from "./store";
+
 import { pages } from "./pages";
+
 
 const App = () => {
   const snap = useSnapshot(state);
