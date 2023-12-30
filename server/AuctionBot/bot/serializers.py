@@ -8,7 +8,7 @@ class TgUserSerializer(serializers.ModelSerializer):
     # Add TgUser
     class Meta:
         model = TgUser
-        exclude = ('id', 'status',)
+        exclude = ('status',)
 
 
 class BetSerializer(serializers.ModelSerializer):
@@ -27,7 +27,8 @@ class ParametersSerializer(serializers.ModelSerializer):
 
 class LotSerializer(serializers.ModelSerializer):
     parameters = ParametersSerializer(read_only=True)
-
+    last_bet = BetSerializer(read_only=True)
+    total_bets = serializers.IntegerField(read_only=True)
     class Meta:
         model = Lot
         fields = '__all__'
