@@ -11,6 +11,13 @@ class TgUserSerializer(serializers.ModelSerializer):
         exclude = ('status',)
 
 
+class TgUserCheckSerializer(serializers.ModelSerializer):
+    # Add TgUser
+    class Meta:
+        model = TgUser
+        fields = '__all__'
+
+
 class BetSerializer(serializers.ModelSerializer):
     # Add Bet
     class Meta:

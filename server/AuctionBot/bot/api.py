@@ -1,5 +1,5 @@
-from .models import Lot, Bet, Parameters, TgUser
-from .serializers import (LotSerializer, BetSerializer, ParametersSerializer, TgUserSerializer)
+from .models import Lot, Bet, TgUser
+from .serializers import (LotSerializer, BetSerializer, TgUserSerializer, TgUserCheckSerializer)
 
 from rest_framework import viewsets, permissions
 from rest_framework import generics
@@ -9,8 +9,8 @@ from django.utils import timezone
 
 
 class TgUserView(generics.ListAPIView):
-    queryset = TgUser.objects.filter(status=True)
-    serializer_class = TgUserSerializer
+    queryset = TgUser.objects.all()
+    serializer_class = TgUserCheckSerializer
 
 class TgUserCreateView(generics.CreateAPIView):
     serializer_class = TgUserSerializer
@@ -74,10 +74,6 @@ class ExpiredLotView(generics.RetrieveAPIView):
         instance.total_bets = instance.bets.count()
         serializer = self.get_serializer(instance)
         return Response(serializer.data)
-
-class ParametersView(generics.ListAPIView):
-    queryset = Parameters.objects.all()
-    serializer_class = ParametersSerializer
 
 
 class BetCreateView(generics.CreateAPIView):

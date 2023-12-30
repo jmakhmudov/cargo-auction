@@ -18,7 +18,7 @@ class TgUser(models.Model):
     comp_name = models.CharField(max_length=255, verbose_name='Название компании')
     job_title = models.CharField(max_length=255, verbose_name='Должность')
     comment = models.TextField(verbose_name='Комментарий', null=True, blank=True)
-    status = models.BooleanField(verbose_name='Подтвержден')
+    status = models.BooleanField(verbose_name='Подтвержден', default=False)
 
     class Meta:
         verbose_name = ' '
