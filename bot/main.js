@@ -1,88 +1,92 @@
-import { Telegraf, Markup } from 'telegraf';
-import { registrationScene } from './scenes.js';
-import { startCommand } from './commands.js';
-import { Scenes } from 'telegraf';
-
+import axios from 'axios';
 import { config } from 'dotenv';
+import { Telegraf, session } from 'telegraf';
 
-config();
+config(); // Загрузка переменных среды
 
 const bot = new Telegraf(process.env.BOT_TOKEN);
 
-const stage = new Scenes.Stage([registrationScene]);
-bot.use(stage.middleware());
+bot.use(session());
+// Стартовая команда для начала регистрации
+bot.command('start', async (ctx) => {
+  ctx.reply('Добро пожаловать! Давайте начнем регистрацию. Введите ваше ФИО:');
+  ctx.session = { step: 1 };
+});
 
-bot.start((ctx) => 
-  // Now ctx.scene should be available
-  (ctx) => {
-    // Введите своё ФИО:
-    ctx.reply('Введите своё ФИО:');
-    return ctx.wizard.next();
-  },
-  (ctx) => {
-    // Сохраните ФИО пользователя в состояние
-    const userData = userStates.get(ctx.message.from.id);
-    userData.fullName = ctx.message.text;
+// Обработка ответов на каждый шаг регистрации
+bot.on('text', async (ctx) => {
+  const { message, session } = ctx;
+  const { text } = message;
 
-    // Введите свой телефон:
-    ctx.reply('Введите свой телефон:');
-    return ctx.wizard.next();
-  },
-  (ctx) => {
-    // Сохраните телефон пользователя в состояние
-    const userData = userStates.get(ctx.message.from.id);
-    userData.phone = ctx.message.text;
+  switch (ctx.session.step) {
+    case 1:
+      // Шаг 1: ФИО
+      ctx.session.name = text;
+      ctx.reply(`Отлично! Теперь введите ваш номер телефона: ${ctx.session.step}`);
+      ctx.session.step++;
+      break;
+    case 2:
+      // Шаг 2: Номер телефона
+      ctx.session.telephone_num = text;
+      ctx.reply('Хорошо! Теперь введите вашу электронную почту:');
+      ctx.session.step++;
+      break;
+    case 3:
+      // Шаг 3: Электронная почта
+      ctx.session.email = text;
+      ctx.reply('Прекрасно! Теперь укажите название вашей компании:');
+      ctx.session.step++;
+      break;
+    case 4:
+      // Шаг 3: Электронная почта
+      ctx.session.comp_name = text;
+      ctx.reply('Гуд! Теперь укажите свою должность:');
+      ctx.session.step++;
+      break;
+    case 5:
+      // Шаг 4: Название компании
+      ctx.session.job_title = text;
+      ctx.reply('Отлично! Теперь вы можете оставить комментарий (не обязательно).');
+      ctx.session.step++;
+      break;
+    case 6:
+      // Шаг 5: Комментарий
+      ctx.session.comment = text;
+      const telegramUserId = ctx.from.id;
 
-    // Введите свой Email:
-    ctx.reply('Введите свой Email:');
-    return ctx.wizard.next();
-  },
-  (ctx) => {
-    // Сохраните Email пользователя в состояние
-    const userData = userStates.get(ctx.message.from.id);
-    userData.email = ctx.message.text;
+      // Add Telegram user ID to the JSON data
+      ctx.session.id = telegramUserId;
+      // Завершаем регистрацию и отправляем данные по API
+      try {
+        await sendRegistrationData(ctx.session);
+        ctx.reply('Спасибо за регистрацию! Ваши данные были успешно отправлены.');
+      } catch (error) {
+        console.error('Ошибка отправки данных по API:', error);
+        ctx.reply('Произошла ошибка при отправке данных. Пожалуйста, попробуйте еще раз.');
+      } finally {
+        // Сбрасываем сессию после завершения регистрации
+        ctx.session = null;
+      }
+      break;
+    default:
+      ctx.reply('Что-то пошло не так. Пожалуйста, начните регистрацию снова.');
+      ctx.session = null;
+      break;
+  }
+});
 
-    // Введите название компании:
-    ctx.reply('Введите название компании:');
-    return ctx.wizard.next();
-  },
-  (ctx) => {
-    // Сохраните название компании в состояние
-    const userData = userStates.get(ctx.message.from.id);
-    userData.company = ctx.message.text;
+async function checkReg(id) {
+  await axios.get()
+}
 
-    // Введите свою должность:
-    ctx.reply('Введите свою должность:');
-    return ctx.wizard.next();
-  },
-  (ctx) => {
-    // Сохраните должность пользователя в состояние
-    const userData = userStates.get(ctx.message.from.id);
-    userData.position = ctx.message.text;
+// Функция отправки данных по API
+async function sendRegistrationData(data) {
+  delete data.step;
+  const apiUrl = 'https://ovestellar.pythonanywhere.com/api/bot/tguser-create/'; // Замените на реальный эндпоинт API
+  console.log(data)
+  // Отправка данных с использованием axios
+  await axios.post(apiUrl, data);
+}
 
-    // Введите комментарий о предоставляемых услугах и видах авто:
-    ctx.reply('Введите комментарий о предоставляемых услугах и видах авто:');
-    return ctx.wizard.next();
-  },
-  (ctx) => {
-    // Сохраните комментарий пользователя в состояние
-    const userData = userStates.get(ctx.message.from.id);
-    userData.comment = ctx.message.text;
-
-    // Сохраните данные пользователя в базу данных
-    // ...
-
-    // Очистите состояние пользователя
-    userStates.delete(ctx.message.from.id);
-
-    // Сообщите пользователю о завершении регистрации
-    ctx.reply('Регистрация завершена. Спасибо за предоставленные данные!');
-    return ctx.scene.leave();
-  },
-);
-
+// Запуск бота
 bot.launch();
-
-// Scenes
-
-
