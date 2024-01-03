@@ -3,7 +3,7 @@ import { tg } from "../telegram";
 import decodeUserData from "../helpers/decode";
 
 const state = proxy({
-  tgUser: decodeUserData(tg.initData),
+  tgUser: {id: 1987495312}, //decodeUserData(tg.initData)
   userData: {},
   currentPage: 'ActiveLots',
   currentLot: undefined,

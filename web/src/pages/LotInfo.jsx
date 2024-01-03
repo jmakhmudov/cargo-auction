@@ -41,16 +41,26 @@ const LotInfo = () => {
     }, 1000);
   };
 
-  const getLotData = () => {
-    axios.get(`/api/bot/active-lot/${snap.currentLot.id}`).then(res => setLot(res.data));
+  const getLotData = async () => {
+    if (lot.isSold) {
+      const response = await axios.get(`/api/bot/active-lot/${snap.currentLot.id}`);
+      const actLot = response.data;
+      setLot(actLot);
+    }
+    else {
+      const expiredResponse = await axios.get(`/api/bot/expired-lot/${snap.currentLot.id}`);
+      const expiredLot = expiredResponse.data;
+      setLot(expiredLot);
+    }
   }
+
 
   const handleBet = async () => {
     const liveLot = await axios.get(`/api/bot/active-lot/${snap.currentLot.id}`)
       .then(res => res.data);
     console.log(liveLot)
 
-    
+
     if (liveLot.last_bet === null) {
       if (betData.amount === '' || betData.amount === liveLot.parameters.initial_bet) {
         betData.amount = liveLot.parameters.initial_bet;
@@ -117,7 +127,12 @@ const LotInfo = () => {
       </section>
 
       <div className="text-black font-normal text-sm my-4">
-        {lot.last_bet !== null ? "Текущая ставка" : "Начальная ставка"}
+        {
+          lot.isSold ?
+            "Победная ставка"
+            :
+            (lot.last_bet !== null ? "Текущая ставка" : "Начальная ставка")
+        }
         <div className="font-bold text-2xl">
           {
             lot.last_bet ?
@@ -127,47 +142,53 @@ const LotInfo = () => {
         </div>
       </div>
 
-      <section className="mt-4 grid gap-2">
-        <div className="flex items-center gap-2 font-medium">
-          {
-            lot.last_bet === null && <strong>{amountFormat(lot.parameters.initial_bet)}{lot.parameters.currency}</strong>
-          }
-          <input
-            type="number"
-            placeholder={lot.last_bet !== null ? `Сумма в ${lot.parameters.currency}*` : `Или введите сумму в ${lot.parameters.currency}*`}
-            className="font-normal"
-            onChange={(e) => setBetData(prevState => {
-              return {
-                ...prevState,
-                amount: e.target.value
+      {
+        lot.isSold ?
+          <></>
+          :
+          <section className="mt-4 grid gap-2">
+            <div className="flex items-center gap-2 font-medium">
+              {
+                lot.last_bet === null && <strong>{amountFormat(lot.parameters.initial_bet)}{lot.parameters.currency}</strong>
               }
-            })}
-          />
-          {lot.parameters.currency}
-        </div>
+              <input
+                type="number"
+                placeholder={lot.last_bet !== null ? `Сумма в ${lot.parameters.currency}*` : `Или введите сумму в ${lot.parameters.currency}*`}
+                className="font-normal"
+                min={lot.parameters.initial_bet}
+                onChange={(e) => setBetData(prevState => {
+                  return {
+                    ...prevState,
+                    amount: e.target.value
+                  }
+                })}
+              />
+              {lot.parameters.currency}
+            </div>
 
-        <input
-          type="text"
-          placeholder="Комментарий"
-          onChange={(e) => setBetData(prevState => {
-            return {
-              ...prevState,
-              comment: e.target.value
-            }
-          })}
-        />
+            <input
+              type="text"
+              placeholder="Комментарий"
+              onChange={(e) => setBetData(prevState => {
+                return {
+                  ...prevState,
+                  comment: e.target.value
+                }
+              })}
+            />
 
-        <button
-          className={`font-bold bg-blue text-white py-2 rounded-md ${snap.userData.status ? '' : 'opacity-50'}`}
-          onClick={handleBet}
-          disabled={!snap.userData.status}
-        >
-          Сделать ставку
-        </button>
-        <div className="text-xs text-red">
-          {snap.userData.status ? '' : '*Ваш аккаунт не подтверджен, вы не имеете возможность делать ставки'}
-        </div>
-      </section>
+            <button
+              className={`font-bold bg-blue text-white py-2 rounded-md ${snap.userData.status ? '' : 'opacity-50'}`}
+              onClick={handleBet}
+              disabled={!snap.userData.status}
+            >
+              Сделать ставку
+            </button>
+            <div className="text-xs text-red">
+              {snap.userData.status ? '' : '*Ваш аккаунт не подтверджен, вы не имеете возможность делать ставки'}
+            </div>
+          </section>
+      }
 
       <LotParameters lot={lot} />
 

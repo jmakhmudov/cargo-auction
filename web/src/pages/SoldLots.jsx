@@ -20,7 +20,7 @@ const SoldLots = () => {
       <div className="grid gap-6 pb-20">
         {lots.map((lot, idx) => (
           <div key={lot.id}>
-            <LotCard lot={lot} />
+            <LotCard lot={lot} isSold={true} />
             {idx + 1 !== lots.length ? <hr className="mt-6" /> : <></>}
           </div>
         ))}

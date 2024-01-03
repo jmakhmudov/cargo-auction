@@ -1,11 +1,21 @@
 import { FiArrowRightCircle } from "react-icons/fi";
 import Badge from "../ui/badge";
 import Location from "../ui/location";
+
 import state from "../../store";
+import { useSnapshot } from "valtio";
 
 import amountFormat from "../../helpers/amountFormat";
+import timeLeft from "../../helpers/timeLeft";
 
-const LotCard = ({ lot }) => {
+
+const LotCard = ({ lot, isSold = false }) => {
+  const snap = useSnapshot(state);
+
+  const checkWinner = () => {
+    return lot.last_bet?.user === snap.userData.id;
+  }
+
   return (
     <div className="grid gap-4">
       <section
@@ -22,7 +32,12 @@ const LotCard = ({ lot }) => {
         </div>
 
         <div className="text-sm font-medium">
-          осталось 2 дня
+          {
+            isSold ?
+            (checkWinner() ? "Вы победили" : "")
+            :
+            timeLeft(lot.finish_date)
+          }
         </div>
       </section>
 
@@ -47,7 +62,9 @@ const LotCard = ({ lot }) => {
 
       <section className="flex items-center justify-between">
         <div className="text-black font-normal text-sm">
-          Текущая ставка
+          {
+            isSold ? "Победная ставка" : "Текущая ставка"
+          }
           <div className="font-bold text-2xl">
             {
               lot.last_bet ?
@@ -65,6 +82,7 @@ const LotCard = ({ lot }) => {
           onClick={() => {
             state.currentPage = 'LotInfo';
             state.currentLot = lot;
+            state.currentLot.isSold = isSold;
           }}
         />
       </section>
