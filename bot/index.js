@@ -88,9 +88,25 @@ bot.on('text', async (ctx) => {
 });
 
 async function checkReg(id) {
-  const user = await axios.get(`https://ovestellar.pythonanywhere.com/api/bot/tguser/${id}`).then(res => res.data);
+  try {
+    const response = await axios.get(`https://ovestellar.pythonanywhere.com/api/bot/tguser/${id}`, {
+      headers: {
+        Accept: 'application/json'
+      }
+    });
 
-  return user;
+    return response.data;
+  } catch (error) {
+    // Check if the error is due to a 404 Not Found
+    if (error.response && error.response.status === 404) {
+      // User is not registered
+      return { detail: 'User not registered' };
+    } else {
+      // Handle other errors
+      console.error('Error checking registration:', error.message);
+      throw error; // Propagate the error
+    }
+  }
 }
 
 // Функция отправки данных по API
