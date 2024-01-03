@@ -42,15 +42,13 @@ const LotInfo = () => {
   };
 
   const getLotData = async () => {
+    await axios.get(`/api/bot/active-lot/${snap.currentLot.id}`).then(res => setLot(res.data))
+    
     if (lot.isSold) {
-      const response = await axios.get(`/api/bot/active-lot/${snap.currentLot.id}`);
-      const actLot = response.data;
-      setLot(actLot);
+      await axios.get(`/api/bot/active-lot/${snap.currentLot.id}`).then(res => setLot(res.data))
     }
     else {
-      const expiredResponse = await axios.get(`/api/bot/expired-lot/${snap.currentLot.id}`);
-      const expiredLot = expiredResponse.data;
-      setLot(expiredLot);
+      await axios.get(`/api/bot/expired-lot/${snap.currentLot.id}`).then(res => setLot(res.data))
     }
   }
 
@@ -134,11 +132,11 @@ const LotInfo = () => {
             (lot.last_bet !== null ? "Текущая ставка" : "Начальная ставка")
         }
         <div className="font-bold text-2xl">
-          {
+          {`${
             lot.last_bet ?
               amountFormat(lot.last_bet.amount)
               : amountFormat(lot.parameters.initial_bet)
-          } {lot.parameters.currency}
+          } ${lot.parameters.currency}`}
         </div>
       </div>
 

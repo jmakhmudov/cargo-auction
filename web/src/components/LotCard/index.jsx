@@ -34,9 +34,9 @@ const LotCard = ({ lot, isSold = false }) => {
         <div className="text-sm font-medium">
           {
             isSold ?
-            (checkWinner() ? "Вы победили" : "")
-            :
-            timeLeft(lot.finish_date)
+              (checkWinner() ? "Вы победили" : "")
+              :
+              timeLeft(lot.finish_date)
           }
         </div>
       </section>
@@ -66,11 +66,9 @@ const LotCard = ({ lot, isSold = false }) => {
             isSold ? "Победная ставка" : "Текущая ставка"
           }
           <div className="font-bold text-2xl">
-            {
-              lot.last_bet ?
+            {`${lot.last_bet ?
                 amountFormat(lot.last_bet.amount)
-                : amountFormat(lot.parameters.initial_bet)
-            } {lot.parameters.currency}
+                : amountFormat(lot.parameters.initial_bet)} ${lot.parameters.currency}`}
           </div>
         </div>
 
