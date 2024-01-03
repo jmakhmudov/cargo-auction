@@ -8,7 +8,7 @@ from rest_framework.response import Response
 from django.utils import timezone
 
 
-class TgUserView(generics.ListAPIView):
+class TgUserView(generics.RetrieveAPIView):
     queryset = TgUser.objects.all()
     serializer_class = TgUserCheckSerializer
 
