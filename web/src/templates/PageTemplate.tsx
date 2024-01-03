@@ -1,4 +1,4 @@
-import React from "react"
+import React from "react";
 
 const PageTemplate = ({ title, children }) => {
   return (
@@ -12,4 +12,4 @@ const PageTemplate = ({ title, children }) => {
   )
 }
 
-export default PageTemplate
+export default PageTemplate;

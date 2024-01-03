@@ -8,8 +8,8 @@ import { pages } from "./pages";
 import axios from "axios";
 import { useEffect } from "react";
 
-const getUserData = (id) => {
-  const user = axios.get(`/api/bot/tguser/${state.tgUser.id}`).then(res => res.data);
+export const getUserData = () => {
+  const user  = axios.get(`/api/bot/tguser/${state.tgUser.id}`).then(res => res.data);
   return user;
 }
 

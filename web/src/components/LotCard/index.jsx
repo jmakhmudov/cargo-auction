@@ -43,7 +43,7 @@ const LotCard = ({ lot, isSold = false }) => {
 
       <section className="grid gap-2">
         <section className="flex item-center gap-2">
-          <Badge title={lot.parameters.del_time} type="days" />
+          <Badge title={`${lot.parameters.del_time} д`} type="days" />
           {
             lot.parameters.is_danger ?
               <Badge title={"Опасный"} type="danger" />

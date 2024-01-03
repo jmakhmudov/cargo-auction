@@ -5,6 +5,12 @@ import LotCard from "../components/LotCard";
 
 const SoldLots = () => {
   const [lots, setLots] = useState([]);
+  const [filteredLots, setFilteredLots] = useState([]);
+
+  const searchLot = (id) => {
+    const filtered = lots.filter((lot) => lot.id.toString().includes(id));
+    setFilteredLots(filtered);
+  };
 
   useEffect(() => {
     axios.get('/api/bot/expired-lots', {
@@ -17,6 +23,12 @@ const SoldLots = () => {
 
   return (
     <PageTemplate title="История торгов">
+      <input
+        type="number"
+        placeholder="Поиск по ID лота"
+        className="font-normal mb-2"
+        onChange={(e) => searchLot(e.target.value)}
+      />
       <div className="grid gap-6 pb-20">
         {lots.map((lot, idx) => (
           <div key={lot.id}>
