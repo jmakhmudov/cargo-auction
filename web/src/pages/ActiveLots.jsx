@@ -11,7 +11,7 @@ const ActiveLots = () => {
   const [lots, setLots] = useState([]);
 
   useEffect(() => {
-    axios.get('/api/bot/lot', {
+    axios.get('/api/bot/active-lots', {
       header: {
         Accept: 'application/json'
       }

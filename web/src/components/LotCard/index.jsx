@@ -3,6 +3,8 @@ import Badge from "../ui/badge";
 import Location from "../ui/location";
 import state from "../../store";
 
+import amountFormat from "../../helpers/amountFormat";
+
 const LotCard = ({ lot }) => {
   return (
     <div className="grid gap-4">
@@ -26,8 +28,13 @@ const LotCard = ({ lot }) => {
 
       <section className="grid gap-2">
         <section className="flex item-center gap-2">
-          <Badge title={`10 дней`} type="days" />
-          <Badge title={"Опасный"} type="danger" />
+          <Badge title={lot.parameters.del_time} type="days" />
+          {
+            lot.parameters.is_danger ?
+              <Badge title={"Опасный"} type="danger" />
+              :
+              <></>
+          }
         </section>
 
         <section className="grid gap-1">
@@ -42,7 +49,11 @@ const LotCard = ({ lot }) => {
         <div className="text-black font-normal text-sm">
           Текущая ставка
           <div className="font-bold text-2xl">
-            {'1000'.toLocaleString('en-US', { minimumFractionDigits: 0 })} {lot.parameters.currency}
+            {
+              lot.last_bet ?
+                amountFormat(lot.last_bet.amount)
+                : amountFormat(lot.parameters.initial_bet)
+            } {lot.parameters.currency}
           </div>
         </div>
 
