@@ -30,12 +30,19 @@ const SoldLots = () => {
         onChange={(e) => searchLot(e.target.value)}
       />
       <div className="grid gap-6 pb-20">
-        {lots.map((lot, idx) => (
-          <div key={lot.id}>
-            <LotCard lot={lot} isSold={true} />
-            {idx + 1 !== lots.length ? <hr className="mt-6" /> : <></>}
-          </div>
-        ))}
+        {filteredLots.length > 0
+          ? filteredLots.map((lot, idx) => (
+            <div key={lot.id}>
+              <LotCard lot={lot} isSold={true} />
+              {idx + 1 !== filteredLots.length ? <hr className="mt-6" /> : <></>}
+            </div>
+          ))
+          : lots.map((lot, idx) => (
+            <div key={lot.id}>
+              <LotCard lot={lot} isSold={true} />
+              {idx + 1 !== lots.length ? <hr className="mt-6" /> : <></>}
+            </div>
+          ))}
       </div>
     </PageTemplate>
   )

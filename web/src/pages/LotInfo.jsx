@@ -12,6 +12,7 @@ import axios from "axios";
 import { MdOutlineRefresh } from "react-icons/md";
 import { IoIosCheckmarkCircle } from "react-icons/io";
 import { PiXCircleFill } from "react-icons/pi";
+import { FiArrowLeft } from "react-icons/fi";
 
 const LotInfo = () => {
   const snap = useSnapshot(state);
@@ -43,7 +44,7 @@ const LotInfo = () => {
 
   const getLotData = async () => {
     await axios.get(`/api/bot/active-lot/${snap.currentLot.id}`).then(res => setLot(res.data))
-    
+
     if (lot.isSold) {
       await axios.get(`/api/bot/active-lot/${snap.currentLot.id}`).then(res => setLot(res.data))
     }
@@ -65,6 +66,9 @@ const LotInfo = () => {
 
         await axios.post('/api/bot/bet-create/', betData);
         setResult(`${betData.amount} ${lot.parameters.currency}`);
+      } else if (betData.amount >= liveLot.parameters.initial_bet) {
+        await axios.post('/api/bot/bet-create/', betData);
+        setResult(`${betData.amount} ${lot.parameters.currency}`);
       } else {
         setResult("Ваша ставка меньше начальной ставки");
       }
@@ -84,6 +88,12 @@ const LotInfo = () => {
 
   return (
     <PageTemplate title={`Информация о лоте`}>
+      <FiArrowLeft 
+        size={20} 
+        className="mb-2 cursor-pointer"
+        onClick={() => {state.currentPage = snap.currentLot.isSold ? 'SoldLots' : 'ActiveLots'}}
+      />
+
       <div
         onClick={() => setOverlay(false)}
         className={`fixed top-0 bottom-0 right-0 left-0 bg-blue bg-opacity-50 flex items-center justify-center ${overlay ? 'block' : 'hidden'}`}
@@ -132,11 +142,10 @@ const LotInfo = () => {
             (lot.last_bet !== null ? "Текущая ставка" : "Начальная ставка")
         }
         <div className="font-bold text-2xl">
-          {`${
-            lot.last_bet ?
+          {`${lot.last_bet ?
               amountFormat(lot.last_bet.amount)
               : amountFormat(lot.parameters.initial_bet)
-          } ${lot.parameters.currency}`}
+            } ${lot.parameters.currency}`}
         </div>
       </div>
 
@@ -146,12 +155,9 @@ const LotInfo = () => {
           :
           <section className="mt-4 grid gap-2">
             <div className="flex items-center gap-2 font-medium">
-              {
-                lot.last_bet === null && <strong>{amountFormat(lot.parameters.initial_bet)}{lot.parameters.currency}</strong>
-              }
               <input
                 type="number"
-                placeholder={lot.last_bet !== null ? `Сумма в ${lot.parameters.currency}*` : `Или введите сумму в ${lot.parameters.currency}*`}
+                placeholder='Сумма'
                 className="font-normal"
                 min={lot.parameters.initial_bet}
                 onChange={(e) => setBetData(prevState => {

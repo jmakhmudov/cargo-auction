@@ -7,7 +7,6 @@ const formatDateTime = (timestamp) => {
     day: 'numeric',
     hour: 'numeric',
     minute: 'numeric',
-    second: 'numeric',
     timeZone: 'Europe/Moscow', // Set the timezone to Moscow time
   };
 
