@@ -4,7 +4,7 @@ import { Telegraf, session } from 'telegraf';
 
 config(); // Загрузка переменных среды
 
-const bot = new Telegraf(process.env.BOT_TOKEN);
+const bot = new Telegraf('6979715664:AAFh4wFIA02ads-aJ6DXCvqdRNfIQKeq9xU');
 
 function isValidEmail(email) {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
