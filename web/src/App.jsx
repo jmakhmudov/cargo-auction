@@ -8,17 +8,40 @@ import { pages } from "./pages";
 import axios from "axios";
 import { useEffect } from "react";
 
-export const getUserData = () => {
-  const user  = axios.get(`/api/bot/tguser/${state.tgUser.id}`).then(res => res.data);
-  return user;
+export const getUserData = async (userId) => {
+  try {
+    const response = await axios.get(`/api/bot/tguser/${userId}`);
+    return response.data;
+  } catch (error) {
+    if (error.response && error.response.status === 404) {
+      return { registered: false };
+    } else {
+      console.error('Error checking registration:', error.message);
+      throw error;
+    }
+  }
 }
 
 const App = () => {
   const snap = useSnapshot(state);
 
   useEffect(() => {
-    state.userData = getUserData(snap.tgUser.id)
-  }, [])
+    const fetchData = async () => {
+      try {
+        const userData = await getUserData(snap.tgUser.id);
+        if (userData.registered === false) {
+          state.currentPage = 'NotReg';
+        } else {
+          state.userData = userData;
+        }
+      } catch (error) {
+        // Handle errors
+        console.error('Error in fetchData:', error);
+      }
+    };
+
+    fetchData();
+  }, [snap.tgUser.id]);
 
   return (
     <main>

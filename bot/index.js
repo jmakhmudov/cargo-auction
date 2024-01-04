@@ -6,6 +6,18 @@ config(); // Загрузка переменных среды
 
 const bot = new Telegraf(process.env.BOT_TOKEN);
 
+function isValidEmail(email) {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  return emailRegex.test(email);
+}
+
+function isValidPhoneNumber(phoneNumber) {
+  const phoneRegex = /\+(9[976]\d|8[987530]\d|6[987]\d|5[90]\d|42\d|3[875]\d|2[98654321]\d|9[8543210]|8[6421]|6[6543210]|5[87654321]|4[987654310]|3[9643210]|2[70]|7|1)\d{1,14}$/;
+
+  return phoneRegex.test(phoneNumber);
+}
+
 bot.use(session());
 // Стартовая команда для начала регистрации
 bot.command('start', async (ctx) => {
@@ -34,20 +46,30 @@ bot.on('text', async (ctx) => {
     case 1:
       // Шаг 1: ФИО
       ctx.session.name = text;
-      ctx.reply(`Отлично! Теперь введите ваш номер телефона: ${ctx.session.step}`);
+      ctx.reply(`Отлично! Теперь введите ваш номер телефона (введите полный номер со знаком +): ${ctx.session.step}`);
       ctx.session.step++;
       break;
     case 2:
-      // Шаг 2: Номер телефона
-      ctx.session.telephone_num = text;
-      ctx.reply('Хорошо! Теперь введите вашу электронную почту:');
-      ctx.session.step++;
+      if (isValidPhoneNumber(text)) {
+        ctx.session.telephone_num = text;
+        ctx.reply('Хорошо! Теперь введите вашу электронную почту:');
+        ctx.session.step++;
+      }
+      else {
+        ctx.reply('Ошибка! Некорректный номер телефона (введите полный номер со знаком +):');
+      }
       break;
     case 3:
       // Шаг 3: Электронная почта
-      ctx.session.email = text;
-      ctx.reply('Прекрасно! Теперь укажите название вашей компании:');
-      ctx.session.step++;
+      if (isValidEmail(text)) {
+        ctx.session.email = text;
+        ctx.reply('Прекрасно! Теперь укажите название вашей компании:');
+        ctx.session.step++;
+      }
+      else {
+        ctx.reply('Ошибка! Введите правильную электронную почту:');
+        ctx.session.step = 3;
+      }
       break;
     case 4:
       // Шаг 3: Электронная почта
