@@ -13,19 +13,19 @@ const LotParameters = ({ lot }) => {
           {formatDateTime(lot.finish_date)} МСК
         </Parameter>
         <Parameter title="Обьем:">
-          {lot.parameters.volume} м3
+          {lot.volume} м3
         </Parameter>
         <Parameter title="Тип груза:">
-          {lot.parameters.is_danger ? "Опасный" : "Непопасный"}
+          {lot.is_danger ? "Опасный" : "Непопасный"}
         </Parameter>
         <Parameter title="Срок доставки:">
-          {lot.parameters.del_time} дн.
+          {lot.del_time} дн.
         </Parameter>
         <Parameter title="Начальная ставка:">
-          {amountFormat(lot.parameters.initial_bet)} {lot.parameters.currency}
+          {amountFormat(lot.initial_bet)} {lot.currency}
         </Parameter>
         <Parameter title="Валюта:">
-          {lot.parameters.currency}
+          {lot.currency}
         </Parameter>
         <Parameter title="Кол-во ставок:">
           {lot.total_bets}
@@ -34,12 +34,12 @@ const LotParameters = ({ lot }) => {
 
       <section className="mt-2">
         <div className="text-sm text-gray">Условия транспортировки</div>
-        <p>{lot.parameters.conditions}</p>
+        <p>{lot.conditions}</p>
       </section>
 
       <section className="mt-6">
         <div className="text-sm text-gray">Описание</div>
-        <p>{lot.parameters.description}</p>
+        <p>{lot.description}</p>
       </section>
     </section>
   )

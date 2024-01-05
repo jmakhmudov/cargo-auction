@@ -43,9 +43,9 @@ const LotCard = ({ lot, isSold = false }) => {
 
       <section className="grid gap-2">
         <section className="flex item-center gap-2">
-          <Badge title={`${lot.parameters.del_time} д`} type="days" />
+          <Badge title={`${lot.del_time} д`} type="days" />
           {
-            lot.parameters.is_danger ?
+            lot.is_danger ?
               <Badge title={"Опасный"} type="danger" />
               :
               <></>
@@ -53,8 +53,8 @@ const LotCard = ({ lot, isSold = false }) => {
         </section>
 
         <section className="grid gap-1">
-          <Location type='departure' location={lot.parameters.departure} />
-          <Location type='destination' location={lot.parameters.destination} />
+          <Location type='departure' location={lot.departure} />
+          <Location type='destination' location={lot.destination} />
         </section>
       </section>
 
@@ -68,7 +68,7 @@ const LotCard = ({ lot, isSold = false }) => {
           <div className="font-bold text-2xl">
             {`${lot.last_bet ?
                 amountFormat(lot.last_bet.amount)
-                : amountFormat(lot.parameters.initial_bet)} ${lot.parameters.currency}`}
+                : amountFormat(lot.initial_bet)} ${lot.currency}`}
           </div>
         </div>
 

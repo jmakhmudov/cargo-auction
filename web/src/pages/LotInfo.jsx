@@ -22,7 +22,7 @@ const LotInfo = () => {
   const [isRotating, setIsRotating] = useState(false);
   const [overlay, setOverlay] = useState(false);
   const [betData, setBetData] = useState({
-    amount: lot.last_bet === null ? lot.parameters.initial_bet : 0,
+    amount: lot.last_bet === null ? lot.initial_bet : 0,
     comment: '',
     lot: lot.id,
     user: snap.userData.id
@@ -59,23 +59,23 @@ const LotInfo = () => {
       .then(res => res.data);
 
     if (liveLot.last_bet === null) {
-      if (betData.amount === '' || betData.amount === liveLot.parameters.initial_bet) {
-        betData.amount = liveLot.parameters.initial_bet;
+      if (betData.amount === '' || betData.amount === liveLot.initial_bet) {
+        betData.amount = liveLot.initial_bet;
 
         await axios.post('/api/bot/bet-create/', betData);
-        setResult(`${betData.amount} ${lot.parameters.currency}`);
-      } else if (betData.amount >= liveLot.parameters.initial_bet) {
+        setResult(`${betData.amount} ${lot.currency}`);
+      } else if (betData.amount >= liveLot.initial_bet) {
         await axios.post('/api/bot/bet-create/', betData);
-        setResult(`${betData.amount} ${lot.parameters.currency}`);
+        setResult(`${betData.amount} ${lot.currency}`);
       } else {
         setResult("Ваша ставка меньше начальной ставки");
       }
     } else {
-      const lastBetAmount = liveLot.last_bet.amount ?? liveLot.parameters.initial_bet;
+      const lastBetAmount = liveLot.last_bet.amount ?? liveLot.initial_bet;
 
-      if (betData.amount > lastBetAmount && betData.amount > liveLot.parameters.initial_bet) {
+      if (betData.amount > lastBetAmount && betData.amount > liveLot.initial_bet) {
         await axios.post('/api/bot/bet-create/', betData);
-        setResult(`${betData.amount} ${lot.parameters.currency}`);
+        setResult(`${betData.amount} ${lot.currency}`);
       } else {
         setResult("Ваша ставка должна быть больше текущей ставки");
       }
@@ -102,7 +102,7 @@ const LotInfo = () => {
       >
         <div className=" bg-white px-16 py-10 rounded-md grid place-items-center text-center">
           {
-            result === `${betData.amount} ${lot.parameters.currency}` ?
+            result === `${betData.amount} ${lot.currency}` ?
               <IoIosCheckmarkCircle size={80} color="#3476AB" />
               :
               <PiXCircleFill size={80} color="#AB3434" />
@@ -128,11 +128,11 @@ const LotInfo = () => {
       <section className="grid gap-1 mt-4">
         <Location
           type='departure'
-          location={lot.parameters.departure}
+          location={lot.departure}
         />
         <Location
           type='destination'
-          location={lot.parameters.destination}
+          location={lot.destination}
         />
       </section>
 
@@ -146,8 +146,8 @@ const LotInfo = () => {
         <div className="font-bold text-2xl">
           {`${lot.last_bet ?
               amountFormat(lot.last_bet.amount)
-              : amountFormat(lot.parameters.initial_bet)
-            } ${lot.parameters.currency}`}
+              : amountFormat(lot.initial_bet)
+            } ${lot.currency}`}
         </div>
       </div>
 
@@ -161,7 +161,7 @@ const LotInfo = () => {
                 type="number"
                 placeholder='Сумма'
                 className="font-normal"
-                min={lot.parameters.initial_bet}
+                min={lot.initial_bet}
                 onChange={(e) => setBetData(prevState => {
                   return {
                     ...prevState,
@@ -169,7 +169,7 @@ const LotInfo = () => {
                   }
                 })}
               />
-              {lot.parameters.currency}
+              {lot.currency}
             </div>
 
             <input
