@@ -47,14 +47,17 @@ const LotInfo = () => {
     await axios.get(`/api/bot/active-lot/${snap.currentLot.id}`).then(res => setLot(res.data))
 
     if (lot.isSold) {
-      await axios.get(`/api/bot/active-lot/${snap.currentLot.id}`).then(res => setLot(res.data))
+      await axios.get(`/api/bot/expired-lot/${snap.currentLot.id}`).then(res => setLot(res.data))
+      console.log(1)
     }
     else {
-      await axios.get(`/api/bot/expired-lot/${snap.currentLot.id}`).then(res => setLot(res.data))
+      console.log(2)
+      await axios.get(`/api/bot/active-lot/${snap.currentLot.id}`).then(res => setLot(res.data))
     }
   }
 
   const handleBet = async () => {
+    console.log('bet')
     const liveLot = await axios.get(`/api/bot/active-lot/${snap.currentLot.id}`)
       .then(res => res.data);
 
@@ -85,9 +88,9 @@ const LotInfo = () => {
   }
 
   const disableBtn = () => {
-    return !snap.userData.status || timeLeft(lot.finish_date) === 'Время уже прошло';
-  }
-  console.log(!snap.userData.status || timeLeft(lot.finish_date) === 'Время уже прошло')
+    return !snap.userData.status || timeLeft(lot.finish_date) === "Время уже прошло";
+  };
+
   return (
     <PageTemplate title={`Информация о лоте`}>
       <FiArrowLeft 
@@ -186,7 +189,7 @@ const LotInfo = () => {
             <button
               className={`font-bold bg-blue text-white py-2 rounded-md ${disableBtn ? '' : 'opacity-50'}`}
               onClick={handleBet}
-              disabled={disableBtn}
+              disabled={!snap.userData.status || timeLeft(lot.finish_date) === "Время уже прошло"}
             >
               Сделать ставку
             </button>
