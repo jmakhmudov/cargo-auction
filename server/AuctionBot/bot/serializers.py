@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import TgUser, Lot, Bet, Parameters
+from .models import TgUser, Lot, Bet
 from datetime import datetime
 from django.utils import timezone
 
@@ -25,15 +25,9 @@ class BetSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class ParametersSerializer(serializers.ModelSerializer):
-    # Add Parameters
-    class Meta:
-        model = Parameters
-        fields = '__all__'
-
 
 class LotSerializer(serializers.ModelSerializer):
-    parameters = ParametersSerializer(read_only=True)
+
     last_bet = BetSerializer(read_only=True)
     total_bets = serializers.IntegerField(read_only=True)
     class Meta:
