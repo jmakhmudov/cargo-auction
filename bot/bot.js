@@ -46,7 +46,7 @@ bot.on('text', async (ctx) => {
     case 1:
       // Шаг 1: ФИО
       ctx.session.name = text;
-      ctx.reply(`Отлично! Теперь введите ваш номер телефона (введите полный номер со знаком +): ${ctx.session.step}`);
+      ctx.reply(`Отлично! Теперь введите ваш номер телефона (введите полный номер со знаком +):`);
       ctx.session.step++;
       break;
     case 2:

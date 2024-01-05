@@ -13,6 +13,7 @@ import { MdOutlineRefresh } from "react-icons/md";
 import { IoIosCheckmarkCircle } from "react-icons/io";
 import { PiXCircleFill } from "react-icons/pi";
 import { FiArrowLeft } from "react-icons/fi";
+import timeLeft from "../helpers/timeLeft";
 
 const LotInfo = () => {
   const snap = useSnapshot(state);
@@ -53,12 +54,9 @@ const LotInfo = () => {
     }
   }
 
-
   const handleBet = async () => {
     const liveLot = await axios.get(`/api/bot/active-lot/${snap.currentLot.id}`)
       .then(res => res.data);
-    console.log(liveLot)
-
 
     if (liveLot.last_bet === null) {
       if (betData.amount === '' || betData.amount === liveLot.parameters.initial_bet) {
@@ -84,6 +82,10 @@ const LotInfo = () => {
     }
     getLotData();
     setOverlay(true);
+  }
+
+  const disableBtn = () => {
+    return !snap.userData.status || timeLeft(lot.finish_date) === 'Время уже прошло';
   }
 
   return (
@@ -182,17 +184,21 @@ const LotInfo = () => {
             />
 
             <button
-              className={`font-bold bg-blue text-white py-2 rounded-md ${snap.userData.status ? '' : 'opacity-50'}`}
+              className={`font-bold bg-blue text-white py-2 rounded-md ${!disableBtn ? '' : 'opacity-50'}`}
               onClick={handleBet}
-              disabled={!snap.userData.status}
+              disabled={disableBtn}
             >
               Сделать ставку
             </button>
             <div className="text-xs text-red">
-              {snap.userData.status ? '' : '*Ваш аккаунт не подтверджен, вы не имеете возможность делать ставки'}
+              {snap.userData.status ? '' : 'Ваш аккаунт не подтверджен, вы не имеете возможность делать ставки'}
+            </div>
+            <div className="text-xs text-red">
+              {timeLeft(lot.finish_date === "Время уже прошло") ? 'Время торгов истекло' : ''}
             </div>
           </section>
       }
+
 
       <LotParameters lot={lot} />
 

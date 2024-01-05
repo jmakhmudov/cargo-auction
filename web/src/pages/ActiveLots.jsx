@@ -19,7 +19,7 @@ const ActiveLots = () => {
   useEffect(() => {
     axios
       .get('/api/bot/active-lots', {
-        headers: { // Correct the typo in 'header' to 'headers'
+        headers: {
           Accept: 'application/json'
         }
       })
