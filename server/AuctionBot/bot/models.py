@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
 
+
 class CustomUser(User):
     class Meta:
         proxy = True
@@ -25,8 +26,10 @@ class TgUser(models.Model):
         verbose_name_plural = 'Пользователи'
 
 
-
-class Parameters(models.Model):
+class Lot(models.Model):
+    id = models.AutoField(primary_key=True)
+    start_date = models.DateTimeField(verbose_name='Начало')
+    finish_date = models.DateTimeField(verbose_name='Конец')
 
     USD = 'USD'
     EUR = 'EUR'
@@ -42,7 +45,7 @@ class Parameters(models.Model):
         (GBP, 'Фунт стерлингов'),
         (JPY, 'Японская иена'),
     ]
-    id = models.AutoField(primary_key=True)
+
     description = models.TextField(verbose_name='Описание')
     departure = models.TextField(verbose_name='Откуда')
     destination = models.TextField(verbose_name='Куда')
@@ -53,24 +56,17 @@ class Parameters(models.Model):
     conditions = models.TextField(verbose_name='Условия транспортировки')
     initial_bet = models.FloatField(verbose_name='Начальная ставка')
     currency = models.CharField(max_length=3, choices=CURRENCY_CHOICES, verbose_name='Валюта')
-    # lot = models.ForeignKey(Lot, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Создан')
+    status = models.BooleanField(default=True, verbose_name='Активен')
 
-    class Meta:
-        verbose_name = ' '
-        verbose_name_plural = 'Параметры'
+    def save(self, *args, **kwargs):
+        # Update status based on finish_date before saving
+        if self.finish_date <= timezone.now():
+            self.status = False
+        super().save(*args, **kwargs)
 
 
-class Lot(models.Model):
-    id = models.AutoField(primary_key=True)
-    start_date = models.DateTimeField(verbose_name='Начало')
-    finish_date = models.DateTimeField(verbose_name='Конец')
-    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Создан')
-    parameters = models.ForeignKey(Parameters, on_delete=models.CASCADE, verbose_name='Параметры',default=1)
-    # created_by = models.IntegerField()
 
-    def finish_date__gte(self):
-        return self.finish_date >= timezone.now()
     class Meta:
         verbose_name = ' '
         verbose_name_plural = 'Лоты'

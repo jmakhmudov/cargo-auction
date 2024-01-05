@@ -1,9 +1,9 @@
 from django.contrib import admin
-from .models import TgUser, Bet, Lot, Parameters, CustomUser
+from .models import TgUser, Bet, Lot, CustomUser
 from django.contrib.auth.models import Group, User
 from django.urls import reverse
 from django.utils.html import format_html
-
+from django.utils import timezone
 
 class CustomUserAdmin(admin.ModelAdmin):
     list_display = ('username', 'email', 'first_name', 'last_name', 'is_staff', 'last_login')
@@ -44,19 +44,17 @@ class BetAdmin(admin.ModelAdmin):
     view_user_link.short_description = "Пользователь"
 
 
-# class ParametersAdmin(admin.ModelAdmin):
-#     list_display = ('id', 'description', 'departure', 'destination', 'initial_bet', 'del_time')
-
-# class ParametersInline(admin.StackedInline):
-#     model = Parameters
-#     extra = 0
-#     max_num = 1
-
 
 @admin.register(Lot)
 class LotAdmin(admin.ModelAdmin):
+    list_display = ('id', 'start_date', 'finish_date', 'initial_bet', 'departure', 'destination', 'status')
+    list_filter = ('start_date', 'finish_date', 'status')
 
-    list_display = ('id', 'start_date', 'finish_date',)
-    model = Lot
-    # inlines = [ParametersInline]
-    search_fields = ('id',)
+    exclude = ['status']
+
+    def save_model(self, request, obj, form, change):
+        super().save_model(request, obj, form, change)
+
+
+
+

@@ -17,7 +17,8 @@ class TgUserCreateView(generics.CreateAPIView):
 
 
 class LotView(generics.RetrieveAPIView):
-    queryset = Lot.objects.filter(finish_date__gte=timezone.now())
+    now = timezone.now()
+    queryset = Lot.objects.filter(status=True)
     serializer_class = LotSerializer
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -30,7 +31,8 @@ class LotView(generics.RetrieveAPIView):
         return Response(serializer.data)
 
 class LotList(generics.ListAPIView):
-    queryset = Lot.objects.filter(finish_date__gte=timezone.now())
+    now = timezone.now()
+    queryset = Lot.objects.filter(status=True)
     serializer_class = LotSerializer
 
     def list(self, request, *args, **kwargs):
@@ -46,7 +48,8 @@ class LotList(generics.ListAPIView):
 
 
 class ExpiredLotList(generics.ListAPIView):
-    queryset = Lot.objects.filter(finish_date__lt=timezone.now())  # Filter expired lots with bets
+    now = timezone.now()
+    queryset = Lot.objects.filter(status=False)  # Filter expired lots with bets
     serializer_class = LotSerializer
 
     def list(self, request, *args, **kwargs):
@@ -62,7 +65,8 @@ class ExpiredLotList(generics.ListAPIView):
 
 
 class ExpiredLotView(generics.RetrieveAPIView):
-    queryset = Lot.objects.filter(finish_date__lt=timezone.now())
+    now = timezone.now()
+    queryset = Lot.objects.filter(status=False)
     serializer_class = LotSerializer
 
     def retrieve(self, request, *args, **kwargs):
