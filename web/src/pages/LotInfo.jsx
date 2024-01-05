@@ -87,7 +87,7 @@ const LotInfo = () => {
   const disableBtn = () => {
     return !snap.userData.status || timeLeft(lot.finish_date) === 'Время уже прошло';
   }
-
+  console.log(!snap.userData.status || timeLeft(lot.finish_date) === 'Время уже прошло')
   return (
     <PageTemplate title={`Информация о лоте`}>
       <FiArrowLeft 
@@ -184,7 +184,7 @@ const LotInfo = () => {
             />
 
             <button
-              className={`font-bold bg-blue text-white py-2 rounded-md ${!disableBtn ? '' : 'opacity-50'}`}
+              className={`font-bold bg-blue text-white py-2 rounded-md ${disableBtn ? '' : 'opacity-50'}`}
               onClick={handleBet}
               disabled={disableBtn}
             >
@@ -194,7 +194,7 @@ const LotInfo = () => {
               {snap.userData.status ? '' : 'Ваш аккаунт не подтверджен, вы не имеете возможность делать ставки'}
             </div>
             <div className="text-xs text-red">
-              {timeLeft(lot.finish_date === "Время уже прошло") ? 'Время торгов истекло' : ''}
+              {timeLeft(lot.finish_date) === "Время уже прошло" ? 'Время торгов истекло' : ''}
             </div>
           </section>
       }
