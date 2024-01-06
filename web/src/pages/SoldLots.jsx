@@ -33,13 +33,13 @@ const SoldLots = () => {
         {filteredLots.length > 0
           ? filteredLots.map((lot, idx) => (
             <div key={lot.id}>
-              <LotCard lot={lot} isSold={true} />
+              <LotCard lot={lot} />
               {idx + 1 !== filteredLots.length ? <hr className="mt-6" /> : <></>}
             </div>
           ))
           : lots.map((lot, idx) => (
             <div key={lot.id}>
-              <LotCard lot={lot} isSold={true} />
+              <LotCard lot={lot} />
               {idx + 1 !== lots.length ? <hr className="mt-6" /> : <></>}
             </div>
           ))}

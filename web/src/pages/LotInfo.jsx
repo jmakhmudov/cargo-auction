@@ -14,6 +14,7 @@ import { IoIosCheckmarkCircle } from "react-icons/io";
 import { PiXCircleFill } from "react-icons/pi";
 import { FiArrowLeft } from "react-icons/fi";
 import timeLeft from "../helpers/timeLeft";
+import { getUserData } from "../App";
 
 const LotInfo = () => {
   const snap = useSnapshot(state);
@@ -30,12 +31,35 @@ const LotInfo = () => {
   const [result, setResult] = useState(betData.amount);
 
   useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const userData = await getUserData(snap.tgUser.id);
+        if (userData.registered === false) {
+          state.currentPage = 'NotReg';
+        } else {
+          state.userData = userData;
+        }
+      } catch (error) {
+        console.error('Error in fetchData:', error);
+      }
+    };
     getLotData();
+    fetchData();
   }, [])
 
-  const handleRefresh = () => {
+  const handleRefresh = async () => {
     setIsRotating(true);
     getLotData();
+    try {
+      const userData = await getUserData(snap.tgUser.id);
+      if (userData.registered === false) {
+        state.currentPage = 'NotReg';
+      } else {
+        state.userData = userData;
+      }
+    } catch (error) {
+      console.error('Error in fetchData:', error);
+    }
 
     setTimeout(() => {
       setRefreshCount(refreshCount + 1);
@@ -46,7 +70,7 @@ const LotInfo = () => {
   const getLotData = async () => {
     await axios.get(`/api/bot/active-lot/${snap.currentLot.id}`).then(res => setLot(res.data))
 
-    if (lot.isSold) {
+    if (!lot.status) {
       await axios.get(`/api/bot/expired-lot/${snap.currentLot.id}`).then(res => setLot(res.data))
       console.log(1)
     }
@@ -57,46 +81,53 @@ const LotInfo = () => {
   }
 
   const handleBet = async () => {
-    console.log('bet')
-    const liveLot = await axios.get(`/api/bot/active-lot/${snap.currentLot.id}`)
-      .then(res => res.data);
-
-    if (liveLot.last_bet === null) {
-      if (betData.amount === '' || betData.amount === liveLot.initial_bet) {
-        betData.amount = liveLot.initial_bet;
-
-        await axios.post('/api/bot/bet-create/', betData);
-        setResult(`${betData.amount} ${lot.currency}`);
-      } else if (betData.amount >= liveLot.initial_bet) {
-        await axios.post('/api/bot/bet-create/', betData);
-        setResult(`${betData.amount} ${lot.currency}`);
+    try {
+      const userData = await getUserData(snap.tgUser.id);
+      if (userData.registered === false) {
+        state.currentPage = 'NotReg';
       } else {
-        setResult("Ваша ставка меньше начальной ставки");
-      }
-    } else {
-      const lastBetAmount = liveLot.last_bet.amount ?? liveLot.initial_bet;
+        state.userData = userData;
+        if (userData.status) {
+          const liveLot = await axios.get(`/api/bot/active-lot/${snap.currentLot.id}`)
+            .then(res => res.data);
 
-      if (betData.amount > lastBetAmount && betData.amount > liveLot.initial_bet) {
-        await axios.post('/api/bot/bet-create/', betData);
-        setResult(`${betData.amount} ${lot.currency}`);
-      } else {
-        setResult("Ваша ставка должна быть больше текущей ставки");
+          if (liveLot.last_bet === null) {
+            if (betData.amount === '' || betData.amount === liveLot.initial_bet) {
+              betData.amount = liveLot.initial_bet;
+
+              await axios.post('/api/bot/bet-create/', betData);
+              setResult(`${betData.amount} ${lot.currency}`);
+            } else if (betData.amount >= liveLot.initial_bet) {
+              await axios.post('/api/bot/bet-create/', betData);
+              setResult(`${betData.amount} ${lot.currency}`);
+            } else {
+              setResult("Ваша ставка меньше начальной ставки");
+            }
+          } else {
+            const lastBetAmount = liveLot.last_bet.amount ?? liveLot.initial_bet;
+
+            if (betData.amount > lastBetAmount && betData.amount > liveLot.initial_bet) {
+              await axios.post('/api/bot/bet-create/', betData);
+              setResult(`${betData.amount} ${lot.currency}`);
+            } else {
+              setResult("Ваша ставка должна быть больше текущей ставки");
+            }
+          }
+          getLotData();
+          setOverlay(true);
+        }
       }
+    } catch (error) {
+      console.error('Error in fetchData:', error);
     }
-    getLotData();
-    setOverlay(true);
   }
-
-  const disableBtn = () => {
-    return !snap.userData.status || timeLeft(lot.finish_date) === "Время уже прошло";
-  };
 
   return (
     <PageTemplate title={`Информация о лоте`}>
-      <FiArrowLeft 
-        size={20} 
+      <FiArrowLeft
+        size={20}
         className="mb-2 cursor-pointer"
-        onClick={() => {state.currentPage = snap.currentLot.isSold ? 'SoldLots' : 'ActiveLots'}}
+        onClick={() => { state.currentPage = snap.currentLot.status ? 'ActiveLots' : 'SoldLots' }}
       />
 
       <div
@@ -141,21 +172,21 @@ const LotInfo = () => {
 
       <div className="text-black font-normal text-sm my-4">
         {
-          lot.isSold ?
+          !lot.status ?
             "Победная ставка"
             :
             (lot.last_bet !== null ? "Текущая ставка" : "Начальная ставка")
         }
         <div className="font-bold text-2xl">
           {`${lot.last_bet ?
-              amountFormat(lot.last_bet.amount)
-              : amountFormat(lot.initial_bet)
+            amountFormat(lot.last_bet.amount)
+            : amountFormat(lot.initial_bet)
             } ${lot.currency}`}
         </div>
       </div>
 
       {
-        lot.isSold ?
+        !lot.status ?
           <></>
           :
           <section className="mt-4 grid gap-2">
@@ -187,9 +218,9 @@ const LotInfo = () => {
             />
 
             <button
-              className={`font-bold bg-blue text-white py-2 rounded-md ${disableBtn ? '' : 'opacity-50'}`}
+              className={`font-bold bg-blue text-white py-2 rounded-md ${(!snap.userData.status || !lot.status || timeLeft(lot.finish_date) === "Время уже прошло") ? 'opacity-50' : 'opacity-100'}`}
               onClick={handleBet}
-              disabled={!snap.userData.status || timeLeft(lot.finish_date) === "Время уже прошло"}
+              disabled={!snap.userData.status || !lot.status || timeLeft(lot.finish_date) === "Время уже прошло"}
             >
               Сделать ставку
             </button>

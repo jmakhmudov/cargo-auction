@@ -35,13 +35,12 @@ const App = () => {
           state.userData = userData;
         }
       } catch (error) {
-        // Handle errors
         console.error('Error in fetchData:', error);
       }
     };
 
     fetchData();
-  }, [snap.tgUser.id]);
+  }, []);
 
   return (
     <main>

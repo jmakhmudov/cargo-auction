@@ -9,7 +9,7 @@ import amountFormat from "../../helpers/amountFormat";
 import timeLeft from "../../helpers/timeLeft";
 
 
-const LotCard = ({ lot, isSold = false }) => {
+const LotCard = ({ lot }) => {
   const snap = useSnapshot(state);
 
   const checkWinner = () => {
@@ -33,7 +33,7 @@ const LotCard = ({ lot, isSold = false }) => {
 
         <div className="text-sm font-medium">
           {
-            isSold ?
+            !lot.status ?
               (checkWinner() ? "Вы победили" : "")
               :
               timeLeft(lot.finish_date)
@@ -63,7 +63,7 @@ const LotCard = ({ lot, isSold = false }) => {
       <section className="flex items-center justify-between">
         <div className="text-black font-normal text-sm">
           {
-            isSold ? "Победная ставка" : "Текущая ставка"
+            !lot.status ? "Победная ставка" : "Текущая ставка"
           }
           <div className="font-bold text-2xl">
             {`${lot.last_bet ?
@@ -80,7 +80,6 @@ const LotCard = ({ lot, isSold = false }) => {
           onClick={() => {
             state.currentPage = 'LotInfo';
             state.currentLot = lot;
-            state.currentLot.isSold = isSold;
           }}
         />
       </section>
