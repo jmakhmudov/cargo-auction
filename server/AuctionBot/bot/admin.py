@@ -43,18 +43,16 @@ class BetAdmin(admin.ModelAdmin):
     view_lot_link.short_description = "Лот"
     view_user_link.short_description = "Пользователь"
 
-
-
 @admin.register(Lot)
 class LotAdmin(admin.ModelAdmin):
-    list_display = ('id', 'start_date', 'finish_date', 'initial_bet', 'departure', 'destination', 'status')
-    list_filter = ('start_date', 'finish_date', 'status')
+    list_display = ('id', 'start_date', 'finish_date','initial_bet', 'departure', 'destination', 'is_active')
+    list_filter = ('start_date', 'finish_date')
+    def is_active(self, obj):
+        current_time = timezone.now()
+        return (obj.start_date <= current_time and obj.finish_date > current_time)
 
-    exclude = ['status']
-
-    def save_model(self, request, obj, form, change):
-        super().save_model(request, obj, form, change)
-
+    is_active.boolean = True
+    is_active.short_description = "Активные"
 
 
 

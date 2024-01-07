@@ -1,7 +1,6 @@
 from rest_framework import serializers
 from .models import TgUser, Lot, Bet
-from datetime import datetime
-from django.utils import timezone
+
 
 
 class TgUserSerializer(serializers.ModelSerializer):

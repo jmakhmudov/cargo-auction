@@ -1,7 +1,5 @@
 from .models import Lot, Bet, TgUser
 from .serializers import (LotSerializer, BetSerializer, TgUserSerializer, TgUserCheckSerializer)
-
-from rest_framework import viewsets, permissions
 from rest_framework import generics
 from rest_framework.response import Response
 
@@ -17,9 +15,12 @@ class TgUserCreateView(generics.CreateAPIView):
 
 
 class LotView(generics.RetrieveAPIView):
-    now = timezone.now()
-    queryset = Lot.objects.filter(status=True)
     serializer_class = LotSerializer
+
+    def get_queryset(self):
+        now = timezone.now()
+        return Lot.objects.filter(start_date__lte=now, finish_date__gte=now)
+
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
         try:
@@ -31,9 +32,11 @@ class LotView(generics.RetrieveAPIView):
         return Response(serializer.data)
 
 class LotList(generics.ListAPIView):
-    now = timezone.now()
-    queryset = Lot.objects.filter(status=True)
     serializer_class = LotSerializer
+
+    def get_queryset(self):
+        now = timezone.now()
+        return Lot.objects.filter(start_date__lte=now, finish_date__gte=now)
 
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
@@ -48,9 +51,11 @@ class LotList(generics.ListAPIView):
 
 
 class ExpiredLotList(generics.ListAPIView):
-    now = timezone.now()
-    queryset = Lot.objects.filter(status=False)  # Filter expired lots with bets
     serializer_class = LotSerializer
+
+    def get_queryset(self):
+        now = timezone.now()
+        return Lot.objects.filter(finish_date__lt=now)
 
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
@@ -65,9 +70,11 @@ class ExpiredLotList(generics.ListAPIView):
 
 
 class ExpiredLotView(generics.RetrieveAPIView):
-    now = timezone.now()
-    queryset = Lot.objects.filter(status=False)
     serializer_class = LotSerializer
+
+    def get_queryset(self):
+        now = timezone.now()
+        return Lot.objects.filter(finish_date__lt=now)
 
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
