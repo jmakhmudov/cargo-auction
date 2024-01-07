@@ -12,20 +12,29 @@ const Navbar = () => {
 
   return (
     <div
-      className={`flex items-center justify-around py-3 bg-blue rounded-md fixed bottom-4 right-4 left-4 shadow-lg shadow-blue ${snap.currentPage === "NotReg" && "hidden"}`}
+      className={`flex items-center justify-between py-3 bg-blue rounded-md fixed bottom-4 right-4 left-4 shadow-lg shadow-blue ${snap.currentPage === "NotReg" && "hidden"}`}
     >
-      <FiBox 
-        size={30} 
-        color="white" 
-        className={`${setActiveBtn('ActiveLots')} cursor-pointer`} 
+      <div 
+        className="bg-blue w-1/2 flex items-center justify-center"
         onClick={() => state.currentPage = 'ActiveLots'}
-      />
-      <FiCheckSquare 
-        size={30} 
-        color="white" 
-        className={`${setActiveBtn('SoldLots')} cursor-pointer`} 
+      >
+        <FiBox
+          size={30}
+          color="white"
+          className={`${setActiveBtn('ActiveLots')} cursor-pointer`}
+        />
+      </div>
+
+      <div 
+        className="bg-blue w-1/2 flex items-center justify-center"
         onClick={() => state.currentPage = 'SoldLots'}
-      />
+      >
+        <FiCheckSquare
+          size={30}
+          color="white"
+          className={`${setActiveBtn('SoldLots')} cursor-pointer`}
+        />
+      </div>
     </div>
   );
 }

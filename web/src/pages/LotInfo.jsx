@@ -124,11 +124,14 @@ const LotInfo = () => {
 
   return (
     <PageTemplate title={`Информация о лоте`}>
-      <FiArrowLeft
-        size={20}
-        className="mb-2 cursor-pointer"
-        onClick={() => { state.currentPage = timeLeft(lot.finish_date) === "Время торгов истекло" ? 'SoldLots' : 'ActiveLots' }}
-      />
+      <div className="">
+        <FiArrowLeft
+          size={24}
+          className="mb-2 cursor-pointer"
+          color="#3476AB"
+          onClick={() => { state.currentPage = timeLeft(lot.finish_date) === "Время торгов истекло" ? 'SoldLots' : 'ActiveLots' }}
+        />
+      </div>
 
       <div
         onClick={() => setOverlay(false)}
@@ -218,9 +221,9 @@ const LotInfo = () => {
             />
 
             <button
-              className={`font-bold bg-blue text-white py-2 rounded-md ${(!snap.userData.status  || timeLeft(lot.finish_date) === "Время торгов истекло") ? 'opacity-50' : 'opacity-100'}`}
+              className={`font-bold bg-blue text-white py-2 rounded-md ${(!snap.userData.status || timeLeft(lot.finish_date) === "Время торгов истекло") ? 'opacity-50' : 'opacity-100'}`}
               onClick={handleBet}
-              disabled={!snap.userData.status  || timeLeft(lot.finish_date) === "Время торгов истекло"}
+              disabled={!snap.userData.status || timeLeft(lot.finish_date) === "Время торгов истекло"}
             >
               Сделать ставку
             </button>
