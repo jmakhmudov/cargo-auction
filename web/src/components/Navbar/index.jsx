@@ -12,7 +12,7 @@ const Navbar = () => {
 
   return (
     <div
-      className=" flex items-center justify-around py-3 bg-blue rounded-md fixed bottom-4 right-4 left-4 shadow-lg shadow-blue"
+      className={`flex items-center justify-around py-3 bg-blue rounded-md fixed bottom-4 right-4 left-4 shadow-lg shadow-blue ${snap.currentPage === "NotReg" && "hidden"}`}
     >
       <FiBox 
         size={30} 
