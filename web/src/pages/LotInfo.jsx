@@ -127,7 +127,7 @@ const LotInfo = () => {
       <FiArrowLeft
         size={20}
         className="mb-2 cursor-pointer"
-        onClick={() => { state.currentPage = timeLeft(lot.finish_date) === "Время торгов истекло" ? 'ActiveLots' : 'SoldLots' }}
+        onClick={() => { state.currentPage = timeLeft(lot.finish_date) === "Время торгов истекло" ? 'SoldLots' : 'ActiveLots' }}
       />
 
       <div

@@ -1,9 +1,9 @@
 import { FiAlertTriangle } from "react-icons/fi";
-import { FiCalendar } from "react-icons/fi";
+import { TbTruckDelivery } from "react-icons/tb";
 
 const dangerIcon = () => (<FiAlertTriangle />);
 
-const daysIcon = () => (<FiCalendar />);
+const daysIcon = () => (<TbTruckDelivery size={18} strokeWidth={1.5} />);
 
 const badgeType = {
   'danger': {
