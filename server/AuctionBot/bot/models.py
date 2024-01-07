@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django.utils import timezone
 
 
 class CustomUser(User):
@@ -57,13 +56,6 @@ class Lot(models.Model):
     initial_bet = models.FloatField(verbose_name='Начальная ставка')
     currency = models.CharField(max_length=3, choices=CURRENCY_CHOICES, verbose_name='Валюта')
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Создан')
-    status = models.BooleanField(default=True, verbose_name='Активен')
-
-    def save(self, *args, **kwargs):
-        # Update status based on finish_date before saving
-        if self.finish_date <= timezone.now():
-            self.status = False
-        super().save(*args, **kwargs)
 
 
 
