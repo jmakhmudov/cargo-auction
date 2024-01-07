@@ -33,7 +33,7 @@ const LotCard = ({ lot }) => {
 
         <div className="text-sm font-medium">
           {
-            !lot.status ?
+            timeLeft(lot.finish_date) === "Время торгов истекло" ?
               (checkWinner() ? "Вы победили" : "")
               :
               timeLeft(lot.finish_date)
@@ -63,7 +63,7 @@ const LotCard = ({ lot }) => {
       <section className="flex items-center justify-between">
         <div className="text-black font-normal text-sm">
           {
-            !lot.status ? "Победная ставка" : "Текущая ставка"
+            timeLeft(lot.finish_date) === "Время торгов истекло" ? "Победная ставка" : "Текущая ставка"
           }
           <div className="font-bold text-2xl">
             {`${lot.last_bet ?

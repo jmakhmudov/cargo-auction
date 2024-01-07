@@ -70,7 +70,7 @@ const LotInfo = () => {
   const getLotData = async () => {
     await axios.get(`/api/bot/active-lot/${snap.currentLot.id}`).then(res => setLot(res.data))
 
-    if (!lot.status) {
+    if (timeLeft(lot.finish_date) === "Время торгов истекло") {
       await axios.get(`/api/bot/expired-lot/${snap.currentLot.id}`).then(res => setLot(res.data))
       console.log(1)
     }
@@ -127,7 +127,7 @@ const LotInfo = () => {
       <FiArrowLeft
         size={20}
         className="mb-2 cursor-pointer"
-        onClick={() => { state.currentPage = snap.currentLot.status ? 'ActiveLots' : 'SoldLots' }}
+        onClick={() => { state.currentPage = timeLeft(lot.finish_date) === "Время торгов истекло" ? 'ActiveLots' : 'SoldLots' }}
       />
 
       <div
@@ -172,7 +172,7 @@ const LotInfo = () => {
 
       <div className="text-black font-normal text-sm my-4">
         {
-          !lot.status ?
+          timeLeft(lot.finish_date) === "Время торгов истекло" ?
             "Победная ставка"
             :
             (lot.last_bet !== null ? "Текущая ставка" : "Начальная ставка")
@@ -186,7 +186,7 @@ const LotInfo = () => {
       </div>
 
       {
-        !lot.status ?
+        timeLeft(lot.finish_date) === "Время торгов истекло" ?
           <></>
           :
           <section className="mt-4 grid gap-2">
@@ -218,9 +218,9 @@ const LotInfo = () => {
             />
 
             <button
-              className={`font-bold bg-blue text-white py-2 rounded-md ${(!snap.userData.status || !lot.status || timeLeft(lot.finish_date) === "Время уже прошло") ? 'opacity-50' : 'opacity-100'}`}
+              className={`font-bold bg-blue text-white py-2 rounded-md ${(!snap.userData.status  || timeLeft(lot.finish_date) === "Время торгов истекло") ? 'opacity-50' : 'opacity-100'}`}
               onClick={handleBet}
-              disabled={!snap.userData.status || !lot.status || timeLeft(lot.finish_date) === "Время уже прошло"}
+              disabled={!snap.userData.status  || timeLeft(lot.finish_date) === "Время торгов истекло"}
             >
               Сделать ставку
             </button>
@@ -228,7 +228,7 @@ const LotInfo = () => {
               {snap.userData.status ? '' : 'Ваш аккаунт не подтверджен, вы не имеете возможность делать ставки'}
             </div>
             <div className="text-xs text-red">
-              {timeLeft(lot.finish_date) === "Время уже прошло" ? 'Время торгов истекло' : ''}
+              {timeLeft(lot.finish_date) === "Время торгов истекло" ? 'Время торгов истекло' : ''}
             </div>
           </section>
       }
