@@ -13,8 +13,10 @@ import { MdOutlineRefresh } from "react-icons/md";
 import { IoIosCheckmarkCircle } from "react-icons/io";
 import { PiXCircleFill } from "react-icons/pi";
 import { FiArrowLeft } from "react-icons/fi";
+
 import timeLeft from "../helpers/timeLeft";
 import { getUserData } from "../App";
+import { checkWinner } from "../components/LotCard";
 
 const LotInfo = () => {
   const snap = useSnapshot(state);
@@ -92,25 +94,28 @@ const LotInfo = () => {
             .then(res => res.data);
 
           if (liveLot.last_bet === null) {
-            if (betData.amount === '' || betData.amount === liveLot.initial_bet) {
+            if (betData.amount === '' || betData.amount === liveLot.initial_bet && betData.amount >= 0) {
               betData.amount = liveLot.initial_bet;
 
               await axios.post('/api/bot/bet-create/', betData);
               setResult(`${betData.amount} ${lot.currency}`);
-            } else if (betData.amount >= liveLot.initial_bet) {
+            } else if (betData.amount <= liveLot.initial_bet && betData.amount >= 0) {
               await axios.post('/api/bot/bet-create/', betData);
               setResult(`${betData.amount} ${lot.currency}`);
             } else {
-              setResult("Ваша ставка меньше начальной ставки");
+              setResult("Ваша ставка больше начальной ставки");
             }
           } else {
             const lastBetAmount = liveLot.last_bet.amount ?? liveLot.initial_bet;
 
-            if (betData.amount > lastBetAmount && betData.amount > liveLot.initial_bet) {
+            if (betData.amount < lastBetAmount && betData.amount < liveLot.initial_bet && betData.amount >= 0) {
               await axios.post('/api/bot/bet-create/', betData);
               setResult(`${betData.amount} ${lot.currency}`);
-            } else {
-              setResult("Ваша ставка должна быть больше текущей ставки");
+            } else if (betData.amount < 0) {
+              setResult("Ваша ставка должна быть больше 0");
+            }
+            else {
+              setResult("Ваша ставка должна быть меньше текущей ставки");
             }
           }
           getLotData();
@@ -155,11 +160,21 @@ const LotInfo = () => {
           </h2>
 
           <div className="text-sm">
-            {lot.start_date.substring(0, 10)}
+            {lot.finish_date.substring(0, 10)}
           </div>
         </div>
 
-        <MdOutlineRefresh size={24} onClick={handleRefresh} className={`${isRotating && 'rotate-360 animate-spin'} cursor-pointer`} />
+        <div className="flex flex-col items-end">
+          <MdOutlineRefresh size={24} onClick={handleRefresh} className={`${isRotating && 'rotate-360 animate-spin'} cursor-pointer`} />
+          <div className="text-sm font-medium text-right">
+            {
+              timeLeft(lot.finish_date) === "Время торгов истекло" ?
+                (checkWinner(snap, lot) ? "Вы победили" : "")
+                :
+                timeLeft(lot.finish_date)
+            }
+          </div>
+        </div>
       </div>
 
       <section className="grid gap-1 mt-4">

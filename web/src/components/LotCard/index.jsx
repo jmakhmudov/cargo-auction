@@ -8,13 +8,12 @@ import { useSnapshot } from "valtio";
 import amountFormat from "../../helpers/amountFormat";
 import timeLeft from "../../helpers/timeLeft";
 
+export const checkWinner = (snap, lot) => {
+  return lot.last_bet?.user === snap.userData.id;
+}
 
 const LotCard = ({ lot }) => {
   const snap = useSnapshot(state);
-
-  const checkWinner = () => {
-    return lot.last_bet?.user === snap.userData.id;
-  }
 
   return (
     <div className="grid gap-4">
@@ -27,14 +26,14 @@ const LotCard = ({ lot }) => {
             </span></h2>
 
           <div className="text-sm">
-            {lot.start_date.substring(0, 10)}
+            {lot.finish_date.substring(0, 10)}
           </div>
         </div>
 
         <div className="text-sm font-medium">
           {
             timeLeft(lot.finish_date) === "Время торгов истекло" ?
-              (checkWinner() ? "Вы победили" : "")
+              (checkWinner(snap, lot) ? "Вы победили" : "")
               :
               timeLeft(lot.finish_date)
           }
