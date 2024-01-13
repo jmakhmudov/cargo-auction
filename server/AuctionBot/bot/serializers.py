@@ -7,14 +7,14 @@ class TgUserSerializer(serializers.ModelSerializer):
     # Add TgUser
     class Meta:
         model = TgUser
-        exclude = ('status',)
+        exclude = ('role', 'role_change_time')
 
 
 class TgUserCheckSerializer(serializers.ModelSerializer):
     # Add TgUser
     class Meta:
         model = TgUser
-        fields = '__all__'
+        fields = ('id', 'role')
 
 
 class BetSerializer(serializers.ModelSerializer):
@@ -29,6 +29,7 @@ class LotSerializer(serializers.ModelSerializer):
 
     last_bet = BetSerializer(read_only=True)
     total_bets = serializers.IntegerField(read_only=True)
+    is_cancelled = serializers.BooleanField()
     class Meta:
         model = Lot
         fields = '__all__'

@@ -1,3 +1,6 @@
+from datetime import timezone
+from django.utils import timezone
+
 from django.db import models
 from django.contrib.auth.models import User
 
@@ -18,7 +21,26 @@ class TgUser(models.Model):
     comp_name = models.CharField(max_length=255, verbose_name='Название компании')
     job_title = models.CharField(max_length=255, verbose_name='Должность')
     comment = models.TextField(verbose_name='Комментарий', null=True, blank=True)
-    status = models.BooleanField(verbose_name='Подтвержден', default=False)
+    role_change_time = models.DateTimeField(null=True, blank=True, verbose_name='Последнее изменение роли')
+
+    def save(self, *args, **kwargs):
+        if self.role != self.__original_role:  # Check if role has changed
+            self.role_change_time = timezone.now()  # Use timezone.now()
+        super().save(*args, **kwargs)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.__original_role = self.role
+
+    OBS = 'OBS'
+    PAR = 'PAR'
+    CUS = 'CUS'
+    ROLE_CHOICES = [
+        (OBS, 'Наблюдатель'),
+        (PAR, 'Учатник'),
+        (CUS, 'Заказчик'),
+    ]
+    role = models.CharField(default=OBS, max_length=3, choices=ROLE_CHOICES, verbose_name='Роль')
 
     class Meta:
         verbose_name = ' '
@@ -55,6 +77,7 @@ class Lot(models.Model):
     conditions = models.TextField(verbose_name='Условия транспортировки')
     initial_bet = models.FloatField(verbose_name='Начальная ставка')
     currency = models.CharField(max_length=3, choices=CURRENCY_CHOICES, verbose_name='Валюта')
+    is_cancelled = models.BooleanField(default=False, verbose_name='Отменен')
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Создан')
 
 

@@ -19,7 +19,7 @@ class LotView(generics.RetrieveAPIView):
 
     def get_queryset(self):
         now = timezone.now()
-        return Lot.objects.filter(start_date__lte=now, finish_date__gte=now)
+        return Lot.objects.filter(start_date__lte=now, finish_date__gte=now, is_cancelled=False)
 
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
@@ -36,7 +36,7 @@ class LotList(generics.ListAPIView):
 
     def get_queryset(self):
         now = timezone.now()
-        return Lot.objects.filter(start_date__lte=now, finish_date__gte=now)
+        return Lot.objects.filter(start_date__lte=now, finish_date__gte=now, is_cancelled=False)
 
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
@@ -55,7 +55,7 @@ class ExpiredLotList(generics.ListAPIView):
 
     def get_queryset(self):
         now = timezone.now()
-        return Lot.objects.filter(finish_date__lt=now)
+        return Lot.objects.filter(finish_date__lt=now, is_cancelled=False)
 
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
@@ -74,7 +74,7 @@ class ExpiredLotView(generics.RetrieveAPIView):
 
     def get_queryset(self):
         now = timezone.now()
-        return Lot.objects.filter(finish_date__lt=now)
+        return Lot.objects.filter(finish_date__lt=now, is_cancelled=False)
 
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
