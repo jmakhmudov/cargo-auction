@@ -87,13 +87,13 @@ class LotAdmin(admin.ModelAdmin):
         except Bet.DoesNotExist:
             return '-'
 
-    last_bet_user_link.short_description = "Лидер ID"
+    last_bet_user_link.short_description = "Текущий лидер"
 
     def last_bet_link(self, obj):
         try:
             last_bet = obj.bets.latest('created_at')
             url = reverse("admin:bot_bet_change", args=[last_bet.id])
-            return format_html('<a href="{}">🔗 {}</a>', url, f"{last_bet.amount}")
+            return format_html('<a href="{}">🔗 {} {}</a>', url, f"{last_bet.amount}", obj.currency)
         except Bet.DoesNotExist:
             return ('Ставок нет')
 
