@@ -47,7 +47,7 @@ class BetAdmin(admin.ModelAdmin):
 
 
 class IsActiveFilter(admin.SimpleListFilter):
-    title = _('Активные')
+    title = _('Активен')
     parameter_name = 'is_active'
 
     def lookups(self, request, model_admin):
@@ -69,11 +69,9 @@ class LotAdmin(admin.ModelAdmin):
                     'initial_bet', 'last_bet_link', 'last_bet_user_link', 'bets_link',
                     'departure', 'destination', 'is_active', 'is_cancelled',)
     list_filter = ('start_date', 'finish_date', IsActiveFilter, 'is_cancelled',)
+    search_fields = ('id','start_date', 'finish_date', 'departure', 'destination', 'initial_bet')
     exclude = ('is_cancelled',)
-    # def view_lot_link(self, obj):
-    #     lot = obj.lot
-    #     url = reverse("admin:bot_lot_change", args=[lot.id])
-    #     return format_html('<a href="{}">{}</a>', url, f"ID {lot.id}")
+
     def view_lot(self, obj):
         url = reverse("admin:bot_lot_change", args=[obj.id])
         return format_html('<a href="{}">Посмотреть Лот {}</a>', url, f"ID {obj.id}")
@@ -106,7 +104,7 @@ class LotAdmin(admin.ModelAdmin):
         return (obj.start_date <= current_time and obj.finish_date > current_time and not obj.is_cancelled)
 
     is_active.boolean = True
-    is_active.short_description = "Активные"
+    is_active.short_description = "Активен"
 
     def bets_link(self, obj):
         return format_html('<a href="/admin/bot/bet/?lot__id__exact={} ">🔗 Кол-во {}</a>',
