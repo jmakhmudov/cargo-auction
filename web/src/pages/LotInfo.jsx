@@ -70,17 +70,24 @@ const LotInfo = () => {
   };
 
   const getLotData = async () => {
-    await axios.get(`/api/bot/active-lot/${snap.currentLot.id}`).then(res => setLot(res.data))
-
-    if (timeLeft(lot.finish_date) === "Время торгов истекло") {
-      await axios.get(`/api/bot/expired-lot/${snap.currentLot.id}`).then(res => setLot(res.data))
-      console.log(1)
+    try {
+      const response = await axios.get(`/api/bot/active-lot/${snap.currentLot.id}`);
+      setLot(response.data);
+    } catch (error) {
+      if (error.response && error.response.status === 404) {
+        try {
+          const expiredLotResponse = await axios.get(`/api/bot/expired-lot/${snap.currentLot.id}`);
+          setLot(expiredLotResponse.data);
+        } catch (expiredLotError) {
+          console.error('Error getting expired lot data:', expiredLotError.message);
+          throw expiredLotError;
+        }
+      } else {
+        console.error('Error checking active lot data:', error.message);
+        throw error;
+      }
     }
-    else {
-      console.log(2)
-      await axios.get(`/api/bot/active-lot/${snap.currentLot.id}`).then(res => setLot(res.data))
-    }
-  }
+  };
 
   const handleBet = async () => {
     try {
@@ -89,7 +96,7 @@ const LotInfo = () => {
         state.currentPage = 'NotReg';
       } else {
         state.userData = userData;
-        if (userData.status) {
+        if (userData.role != 'OBS') {
           const liveLot = await axios.get(`/api/bot/active-lot/${snap.currentLot.id}`)
             .then(res => res.data);
 
@@ -103,12 +110,12 @@ const LotInfo = () => {
               await axios.post('/api/bot/bet-create/', betData);
               setResult(`${betData.amount} ${lot.currency}`);
             } else {
-              setResult("Ваша ставка больше начальной ставки");
+              setResult("Ваша ставка меньше начальной ставки");
             }
           } else {
             const lastBetAmount = liveLot.last_bet.amount ?? liveLot.initial_bet;
 
-            if (betData.amount < lastBetAmount && betData.amount < liveLot.initial_bet && betData.amount >= 0) {
+            if (betData.amount < lastBetAmount && betData.amount >= 0) {
               await axios.post('/api/bot/bet-create/', betData);
               setResult(`${betData.amount} ${lot.currency}`);
             } else if (betData.amount < 0) {
@@ -236,14 +243,14 @@ const LotInfo = () => {
             />
 
             <button
-              className={`font-bold bg-blue text-white py-2 rounded-md ${(!snap.userData.status || timeLeft(lot.finish_date) === "Время торгов истекло") ? 'opacity-50' : 'opacity-100'}`}
+              className={`font-bold bg-blue text-white py-2 rounded-md ${(snap.userData.role === 'OBS' || timeLeft(lot.finish_date) === "Время торгов истекло") ? 'opacity-50' : 'opacity-100'}`}
               onClick={handleBet}
-              disabled={!snap.userData.status || timeLeft(lot.finish_date) === "Время торгов истекло"}
+              disabled={snap.userData.role === 'OBS' || timeLeft(lot.finish_date) === "Время торгов истекло"}
             >
               Сделать ставку
             </button>
             <div className="text-xs text-red">
-              {snap.userData.status ? '' : 'Ваш аккаунт не подтверджен, вы не имеете возможность делать ставки'}
+              {snap.userData.role != 'OBS' ? '' : 'Вы наблюдатель, поэтому не имеете возможность делать ставки'}
             </div>
             <div className="text-xs text-red">
               {timeLeft(lot.finish_date) === "Время торгов истекло" ? 'Время торгов истекло' : ''}

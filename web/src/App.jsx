@@ -8,6 +8,8 @@ import { pages } from "./pages";
 import axios from "axios";
 import { useEffect } from "react";
 
+import getRole from "./helpers/getRole";
+
 export const getUserData = async (userId) => {
   try {
     const response = await axios.get(`/api/bot/tguser/${userId}`);
@@ -44,11 +46,15 @@ const App = () => {
 
   return (
     <main>
-      <div className="font-bold text-lg flex gap-1 items-center justify-center">
-        <MdOutlineAccountCircle size={30} />
-        <div>
-          ID <span>{snap.tgUser.id}</span>
+      <div className="font-bold text-lg flex items-center justify-between">
+        <div className="flex items-center gap-1">
+          <MdOutlineAccountCircle size={30} />
+          <div>
+            ID <span>{snap.tgUser.id}</span>
+          </div>
         </div>
+
+        <div className="font-normal text-sm">{getRole(snap.userData.role)}</div>
       </div>
 
       <div
