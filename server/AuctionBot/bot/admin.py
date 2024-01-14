@@ -107,7 +107,7 @@ class LotAdmin(admin.ModelAdmin):
     is_active.short_description = "Активен"
 
     def bets_link(self, obj):
-        return format_html('<a href="/admin/bot/bet/?lot__id__exact={} ">🔗 Кол-во {}</a>',
+        return format_html('<a href="/tg-adminchik/bot/bet/?lot__id__exact={} ">🔗 Кол-во {}</a>',
                            obj.id, obj.bets.count())  # Replace "app_name" with your app's name
 
     bets_link.short_description = "Все ставки"
