@@ -37,7 +37,7 @@ class TgUser(models.Model):
     CUS = 'CUS'
     ROLE_CHOICES = [
         (OBS, 'Наблюдатель'),
-        (PAR, 'Учатник'),
+        (PAR, 'Учаcтник'),
         (CUS, 'Заказчик'),
     ]
     role = models.CharField(default=OBS, max_length=3, choices=ROLE_CHOICES, verbose_name='Роль')
