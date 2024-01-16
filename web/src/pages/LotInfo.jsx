@@ -110,7 +110,7 @@ const LotInfo = () => {
               await axios.post('/api/bot/bet-create/', betData);
               setResult(`${betData.amount} ${lot.currency}`);
             } else {
-              setResult("Ваша ставка меньше начальной ставки");
+              setResult("Ваша ставка больше начальной ставки");
             }
           } else {
             const lastBetAmount = liveLot.last_bet.amount ?? liveLot.initial_bet;
