@@ -1,7 +1,7 @@
 import { useSnapshot } from "valtio";
 import state from "../../store";
 import { FiBox } from "react-icons/fi";
-import { FiCheckSquare } from "react-icons/fi";
+import { RiHistoryLine } from "react-icons/ri";
 
 const Navbar = () => {
   const snap = useSnapshot(state);
@@ -29,7 +29,7 @@ const Navbar = () => {
         className="bg-blue w-1/2 flex items-center justify-center"
         onClick={() => state.currentPage = 'SoldLots'}
       >
-        <FiCheckSquare
+        <RiHistoryLine
           size={30}
           color="white"
           className={`${setActiveBtn('SoldLots')} cursor-pointer`}

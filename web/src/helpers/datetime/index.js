@@ -7,7 +7,7 @@ const formatDateTime = (timestamp) => {
     day: 'numeric',
     hour: 'numeric',
     minute: 'numeric',
-    timeZone: 'Europe/Moscow', // Set the timezone to Moscow time
+    timeZone: 'Asia/Tashkent',
   };
 
   return new Intl.DateTimeFormat('ru-RU', options).format(date);

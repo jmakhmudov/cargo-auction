@@ -5,22 +5,70 @@ import amountFormat from "../../../helpers/amountFormat";
 const LotParameters = ({ lot }) => {
   return (
     <section>
-      <section className="mt-4">
+      <section>
         <Parameter title="Время начала:">
-          {formatDateTime(lot.start_date)} МСК
+          {formatDateTime(lot.start_date)} ТАШ
         </Parameter>
         <Parameter title="Время окончания:">
-          {formatDateTime(lot.finish_date)} МСК
+          {formatDateTime(lot.finish_date)} ТАШ
         </Parameter>
-        <Parameter title="Обьем:">
-          {lot.volume} м3
+      </section>
+
+      <section className="mt-4">
+        <div className="text-sm text-gray">Описание лота</div>
+        <p>{lot.lot_description}</p>
+      </section>
+
+      <section className="mt-4">
+        <Parameter title="Заказчик:">
+          <span>{lot.customer_name}</span>
         </Parameter>
-        <Parameter title="Тип груза:">
-          {lot.is_danger ? "Опасный" : "Непопасный"}
+        <Parameter title="Адрес, телефон заказчика:">
+          {lot.customer_details}
+        </Parameter>
+        <Parameter title="Адрес склада для загрузки:">
+          {lot.loading_address}
+        </Parameter>
+        <Parameter title="Адрес склада назначения:">
+          {lot.destination_address}
         </Parameter>
         <Parameter title="Срок доставки:">
           {lot.del_time} дн.
         </Parameter>
+      </section>
+
+      <section className="mt-4">
+        <Parameter title="Описание груза:">
+          {lot.cargo_description}
+        </Parameter>
+        <Parameter title="Объем:">
+          {lot.volume} м3
+        </Parameter>
+        {lot.temperature &&
+          <Parameter title="Температурный режим (°C):">
+            {lot.temperature}
+          </Parameter>}
+        <Parameter title="Вид упаковки:">
+          {lot.packaging_type}
+        </Parameter>
+        <Parameter title="Описание упаковки:">
+          {lot.packing_description}
+        </Parameter>
+        <Parameter title="Габариты упаковки (ДxШxВ см):">
+          {lot.packaging_dimensions}
+        </Parameter>
+        <Parameter title="Общий вес брутто:">
+          {lot.weight.toLocaleString(undefined, { maximumFractionDigits: 2 })} кг
+        </Parameter>
+        <Parameter title="Тип перевозки:">
+          {lot.shipping_type}
+        </Parameter>
+        <Parameter title="Условия отгрузки:">
+          {lot.shipment_terms}
+        </Parameter>
+      </section>
+
+      <section className="mt-4">
         <Parameter title="Начальная ставка:">
           {amountFormat(lot.initial_bet)} {lot.currency}
         </Parameter>
@@ -31,18 +79,8 @@ const LotParameters = ({ lot }) => {
           {lot.total_bets}
         </Parameter>
       </section>
-
-      <section className="mt-2">
-        <div className="text-sm text-gray">Условия транспортировки</div>
-        <p>{lot.conditions}</p>
-      </section>
-
-      <section className="mt-6">
-        <div className="text-sm text-gray">Описание</div>
-        <p>{lot.description}</p>
-      </section>
     </section>
-  )
+  );
 }
 
 export default LotParameters;

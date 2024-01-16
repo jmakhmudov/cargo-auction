@@ -163,7 +163,7 @@ const LotInfo = () => {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-medium">
-            Лот <span className="font-bold">#{lot.id}</span>
+            {lot.name} - <span className="font-bold">#{lot.id}</span>
           </h2>
 
           <div className="text-sm">

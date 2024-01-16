@@ -22,7 +22,7 @@ const LotCard = ({ lot }) => {
       >
         <div>
           <h2 className="text-2xl font-medium">
-            Лот <span className="font-bold">#{lot.id}
+            {lot.name} - <span className="font-bold">#{lot.id}
             </span></h2>
 
           <div className="text-sm">
@@ -43,12 +43,7 @@ const LotCard = ({ lot }) => {
       <section className="grid gap-2">
         <section className="flex item-center gap-2">
           <Badge title={`${lot.del_time} д`} type="days" />
-          {
-            lot.is_danger ?
-              <Badge title={"Опасный"} type="danger" />
-              :
-              <></>
-          }
+          <Badge title={lot.shipment_terms} type="danger" />
         </section>
 
         <section className="grid gap-1">
@@ -66,8 +61,8 @@ const LotCard = ({ lot }) => {
           }
           <div className="font-bold text-2xl">
             {`${lot.last_bet ?
-                amountFormat(lot.last_bet.amount)
-                : amountFormat(lot.initial_bet)} ${lot.currency}`}
+              amountFormat(lot.last_bet.amount)
+              : amountFormat(lot.initial_bet)} ${lot.currency}`}
           </div>
         </div>
 
