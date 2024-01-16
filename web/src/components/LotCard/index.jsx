@@ -57,7 +57,7 @@ const LotCard = ({ lot }) => {
       <section className="flex items-center justify-between">
         <div className="text-black font-normal text-sm">
           {
-            timeLeft(lot.finish_date) === "Время торгов истекло" ? "Победная ставка" : "Текущая ставка"
+            timeLeft(lot.finish_date) === "Время торгов истекло" ? "Победная ставка" : (lot.last_bet ? <div>Текущая ставка {lot.last_bet && (lot.last_bet.user === snap.userData.id && <strong><span>(вы лидируете)</span></strong>)}</div> : "Начальная ставка")
           }
           <div className="font-bold text-2xl">
             {`${lot.last_bet ?
