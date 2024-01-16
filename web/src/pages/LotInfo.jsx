@@ -17,6 +17,7 @@ import { FiArrowLeft } from "react-icons/fi";
 import timeLeft from "../helpers/timeLeft";
 import { getUserData } from "../App";
 import { checkWinner } from "../components/LotCard";
+import Loading from "../components/ui/loading";
 
 const LotInfo = () => {
   const snap = useSnapshot(state);
@@ -31,6 +32,7 @@ const LotInfo = () => {
     user: snap.userData.id
   });
   const [result, setResult] = useState(betData.amount);
+  const [loading, setLoading] = useState(null)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -90,6 +92,8 @@ const LotInfo = () => {
   };
 
   const handleBet = async () => {
+    setOverlay(true)
+    setLoading(true);
     try {
       const userData = await getUserData(snap.tgUser.id);
       if (userData.registered === false) {
@@ -106,10 +110,13 @@ const LotInfo = () => {
 
               await axios.post('/api/bot/bet-create/', betData);
               setResult(`${betData.amount} ${lot.currency}`);
+              setLoading(false);
             } else if (betData.amount <= liveLot.initial_bet && betData.amount >= 0) {
               await axios.post('/api/bot/bet-create/', betData);
               setResult(`${betData.amount} ${lot.currency}`);
+              setLoading(false);
             } else {
+              setLoading(false);
               setResult("Ваша ставка больше начальной ставки");
             }
           } else {
@@ -117,16 +124,18 @@ const LotInfo = () => {
 
             if (betData.amount < lastBetAmount && betData.amount >= 0) {
               await axios.post('/api/bot/bet-create/', betData);
+              setLoading(false);
               setResult(`${betData.amount} ${lot.currency}`);
             } else if (betData.amount < 0) {
+              setLoading(false);
               setResult("Ваша ставка должна быть больше 0");
             }
             else {
+              setLoading(false);
               setResult("Ваша ставка должна быть меньше текущей ставки");
             }
           }
           getLotData();
-          setOverlay(true);
         }
       }
     } catch (error) {
@@ -151,12 +160,15 @@ const LotInfo = () => {
       >
         <div className=" bg-white px-16 py-10 rounded-md grid place-items-center text-center">
           {
-            result === `${betData.amount} ${lot.currency}` ?
-              <IoIosCheckmarkCircle size={80} color="#3476AB" />
-              :
-              <PiXCircleFill size={80} color="#AB3434" />
+            loading ? <Loading /> : (
+              result === `${betData.amount} ${lot.currency}` ?
+                <IoIosCheckmarkCircle size={80} color="#3476AB" />
+                :
+                <PiXCircleFill size={80} color="#AB3434" />
+            )
+
           }
-          <strong>{result}</strong>
+          <strong>{!loading && result}</strong>
         </div>
       </div>
 
