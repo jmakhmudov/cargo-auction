@@ -49,8 +49,29 @@ class TgUser(models.Model):
 
 class Lot(models.Model):
     id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=255, verbose_name='Имя лота')
     start_date = models.DateTimeField(verbose_name='Начало')
     finish_date = models.DateTimeField(verbose_name='Конец')
+    lot_description = models.TextField(verbose_name='Описание лота')
+    customer_name = models.CharField(max_length=255, verbose_name='Заказчик')
+    customer_details = models.TextField(verbose_name='Адрес, телефон заказчика')
+    departure = models.CharField(max_length=300, verbose_name='Откуда', help_text="Город, страна")
+    destination = models.CharField(max_length=300, verbose_name='Куда', help_text="Город, страна")
+    loading_address = models.TextField(verbose_name='Адрес склада для загрузки')
+    destination_address = models.TextField(verbose_name='Адрес склада назначения')
+    shipping_type = models.CharField(max_length=255, verbose_name='Тип перевозки', help_text='Авто, Жд, Авиа, Cборный')
+    shipment_terms = models.CharField(max_length=255, verbose_name='Условия отгрузки', help_text='(FCA, EXW)')
+    cargo_description = models.TextField(verbose_name='Описание груза')
+    temperature = models.CharField(max_length=255, verbose_name='Температура', blank=True, null=True,
+                                   help_text='Укажите диапазон температур, если требуется температурный режим.')
+
+    packaging_type = models.CharField(max_length=255, verbose_name='Вид упаковки')
+    packing_description = models.TextField(verbose_name='Описание упаковки')
+    packaging_dimensions = models.CharField(max_length=255, verbose_name="Габариты упаковки (ДxШxВ см)",
+                                            help_text="Пример: 120x80x200")
+
+    volume = models.FloatField(verbose_name='Объем (куб.м)',blank=True, null=True)
+    weight = models.FloatField(verbose_name='Общий вес брутто (кг)')
 
     USD = 'USD'
     EUR = 'EUR'
@@ -67,14 +88,7 @@ class Lot(models.Model):
         (JPY, 'Японская иена'),
     ]
 
-    description = models.TextField(verbose_name='Описание')
-    departure = models.TextField(verbose_name='Откуда')
-    destination = models.TextField(verbose_name='Куда')
-    del_time = models.IntegerField(verbose_name='Срок доставки (Дни)')
-    volume = models.FloatField(verbose_name='Объем (куб.м)')
-    weight = models.FloatField(verbose_name='Вес (кг)')
-    is_danger = models.BooleanField(verbose_name='Опасен')
-    conditions = models.TextField(verbose_name='Условия транспортировки')
+    del_time = models.IntegerField(verbose_name='Срок доставки (Дни)',)
     initial_bet = models.FloatField(verbose_name='Начальная ставка')
     currency = models.CharField(max_length=3, choices=CURRENCY_CHOICES, verbose_name='Валюта')
     is_cancelled = models.BooleanField(default=False, verbose_name='Отменен')
