@@ -69,11 +69,33 @@ class LotAdmin(admin.ModelAdmin):
 
     list_display = ('view_lot', 'start_date', 'finish_date',
                     'initial_bet', 'last_bet_link', 'last_bet_user_link', 'bets_link',
-                    'departure', 'destination', 'is_active', 'is_cancelled',)
+                    'departure', 'destination', 'is_active', 'is_cancelled','lot_winner_link')
     list_filter = ('start_date', 'finish_date', IsActiveFilter, 'is_cancelled',)
     search_fields = ('id', 'start_date', 'finish_date', 'departure', 'destination', 'initial_bet')
     exclude = ('is_cancelled',)
 
+    def lot_winner_link(self, obj):
+        if not obj.is_cancelled and obj.finish_date <= timezone.now():
+            try:
+                # Retrieve the latest bet within the lot's time frame
+                latest_bet = obj.bets.filter(created_at__lte=obj.finish_date).latest('created_at')
+
+                # Access the user who made the winning bet
+                winning_user = latest_bet.user
+
+                # Construct the link to the winning user's details
+                url = reverse("admin:bot_tguser_change",
+                              args=[winning_user.id])  # Replace "app_name" with your app's name
+                return format_html('<a href="{}"> 🔗 {}</a>', url, winning_user.comp_name)
+
+            except Bet.DoesNotExist:
+                # No bets or expired without any bets
+                return '-'
+        else:
+            # Lot is not expired or cancelled
+            return '-'
+
+    lot_winner_link.short_description = "Победитель лота"
     def view_lot(self, obj):
         url = reverse("admin:bot_lot_change", args=[obj.id])
         return format_html('<a href="{}">Посмотреть Лот {}</a>', url, f"ID {obj.id}")
@@ -114,6 +136,7 @@ class LotAdmin(admin.ModelAdmin):
 
     bets_link.short_description = "Все ставки"
 
+
     #_______Actions_______
     def finish_early(modeladmin, request, queryset):
         queryset.update(finish_date=timezone.now())
@@ -131,4 +154,4 @@ class LotAdmin(admin.ModelAdmin):
     actions = [finish_early, cancel_lot,]
 
     class Media:
-        js = ('bot/js/calculate_volume.js',)
+        js = ('bot/js/calculate_volume.js', 'bot/js/row_indicator.js',)
