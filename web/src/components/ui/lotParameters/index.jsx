@@ -38,6 +38,9 @@ const LotParameters = ({ lot }) => {
       </section>
 
       <section className="mt-4">
+        <Parameter title="Время готовности к погрузке:">
+          <span>{formatDateTime(lot.loading_time)}</span>
+        </Parameter>
         <Parameter title="Описание груза:">
           {lot.cargo_description}
         </Parameter>
