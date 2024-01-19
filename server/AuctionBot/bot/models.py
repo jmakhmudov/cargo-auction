@@ -58,6 +58,7 @@ class Lot(models.Model):
     departure = models.CharField(max_length=300, verbose_name='Откуда', help_text="Город, страна")
     destination = models.CharField(max_length=300, verbose_name='Куда', help_text="Город, страна")
     loading_address = models.TextField(verbose_name='Адрес склада для загрузки')
+    loading_time = models.DateTimeField(verbose_name='Время готовности к погрузке')
     destination_address = models.TextField(verbose_name='Адрес склада назначения')
     shipping_type = models.CharField(max_length=255, verbose_name='Тип перевозки', help_text='Авто, Жд, Авиа, Cборный')
     shipment_terms = models.CharField(max_length=255, verbose_name='Условия отгрузки', help_text='(FCA, EXW)')
