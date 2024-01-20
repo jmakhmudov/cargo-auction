@@ -97,7 +97,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'ru'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Tashkent'
 
 USE_I18N = True
 
@@ -135,7 +135,7 @@ CORS_ALLOW_METHODS = [
 
 CORS_ALLOW_HEADERS = ['*']  # Allow all headers
 
-DEBUG = False
+DEBUG = True
 CORS_ALLOW_CREDENTIALS = True
 
 SECURE_BROWSER_XSS_FILTER = True
