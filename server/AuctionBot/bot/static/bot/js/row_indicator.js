@@ -11,9 +11,9 @@ rows.forEach(function(row) {
     while (currentElement && currentElement.tagName !== 'TABLE') {
         // Check the alt attribute value and apply the corresponding class
         if (img.alt === 'True') {
-            currentElement.style.backgroundColor = '#E1FFE0';
+            currentElement.style.backgroundColor = 'rgba(161, 255, 165, 0.15)';
         } else if (img.alt === 'False') {
-            currentElement.style.backgroundColor = '#ffe0e0';
+            currentElement.style.backgroundColor = 'rgba(255, 146, 146, 0.15)';
         }
 
         // Move up to the parent element
