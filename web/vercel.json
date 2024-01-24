@@ -2,11 +2,11 @@
   "rewrites": [
     {
       "source": "/:path*",
-      "destination": "https://ovestellar.pythonanywhere.com/api/:path*"
+      "destination": "https://ovestellar.pythonanywhere.com/:path*"
     },
     {
       "source": "/:path*/",
-      "destination": "https://ovestellar.pythonanywhere.com/api/:path*/"
+      "destination": "https://ovestellar.pythonanywhere.com/:path*/"
     }
   ]
 }
