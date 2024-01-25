@@ -13,6 +13,7 @@
 
 body {
   background-color: white;
+  overflow-x: hidden;
   @apply p-4;
 }
 
@@ -32,4 +33,18 @@ input {
   border: 1px solid rgba(0, 0, 0, 0.336);
   width: 100%;
   @apply rounded-md p-2 pl-2 text-sm;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.no-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.selected {
+  @apply text-white border-blue bg-blue;
 }
