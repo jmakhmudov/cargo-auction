@@ -1,10 +1,11 @@
-import axios from 'axios';
-import { config } from 'dotenv';
-import { Telegraf, session, Markup } from 'telegraf';
-
-config(); // Load environment variables
-
+const functions = require('firebase-functions');
+const { Telegraf, session, Markup } = require('telegraf');
+const axios = require('axios');
+require('dotenv').config();
+// Initialize the Telegram bot with your BOT_TOKEN
 const bot = new Telegraf(process.env.BOT_TOKEN);
+bot.use(session());
+
 
 function isValidEmail(email) {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -15,9 +16,6 @@ function isValidPhoneNumber(phoneNumber) {
   const phoneRegex = /\+(9[976]\d|8[987530]\d|6[987]\d|5[90]\d|42\d|3[875]\d|2[98654321]\d|9[8543210]|8[6421]|6[6543210]|5[87654321]|4[987654310]|3[9643210]|2[70]|7|1)\d{1,14}$/;
   return phoneRegex.test(phoneNumber);
 }
-
-bot.use(session());
-
 // Команда старта для начала регистрации
 bot.command('start', async (ctx) => {
   const user = await checkReg(ctx.from.id);
@@ -124,14 +122,12 @@ bot.on('text', async (ctx) => {
   }
 });
 
+
+
 // Функция проверки регистрации пользователя
 async function checkReg(id) {
   try {
-    const response = await axios.get(`https://ovestellar.pythonanywhere.com/api/bot/tguser/${id}`, {
-      headers: {
-        Accept: 'application/json'
-      }
-    });
+    const response = await axios.get(`https://ovestellar.pythonanywhere.com/api/bot/tguser/${id}`);
 
     return response.data;
   } catch (error) {
@@ -162,7 +158,7 @@ bot.action('confirm', async (ctx) => {
 
 bot.action('edit', async (ctx) => {
 
-  ctx.session = {step: 1};
+  ctx.session = { step: 1 };
   ctx.reply('Конечно! Давайте начнем сначало. Давайте начнем регистрацию. Введите ваше ФИО:');
 
 })
@@ -211,5 +207,8 @@ const getRegistrationSummary = (data) => {
   return summary;
 };
 
-// Запуск бота
-bot.launch();
+exports.telegramBot = functions.https.onRequest(async (request, response) => {
+  return await bot.handleUpdate(request.body, response).then((rv) => {
+    return !rv && response.sendStatus(200);
+  });
+});
