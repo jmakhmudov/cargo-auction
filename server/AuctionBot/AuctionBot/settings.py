@@ -22,6 +22,7 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -31,6 +32,7 @@ INSTALLED_APPS = [
     'bot',
     'rest_framework',
     'corsheaders',
+
 ]
 
 MIDDLEWARE = [
@@ -113,11 +115,11 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# REST_FRAMEWORK = {
-#     'DEFAULT_RENDERER_CLASSES': (
-#         'rest_framework.renderers.JSONRenderer',
-#     ),
-# }
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+    ),
+}
 CORS_ORIGIN_ORIGINS = [
     "https://9tn23j-34391.csb.app",
     "http://localhost:8080",
@@ -135,7 +137,7 @@ CORS_ALLOW_METHODS = [
 
 CORS_ALLOW_HEADERS = ['*']  # Allow all headers
 
-DEBUG = False
+DEBUG = True
 CORS_ALLOW_CREDENTIALS = True
 
 SECURE_BROWSER_XSS_FILTER = True
@@ -149,3 +151,5 @@ SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
 ]
+
+

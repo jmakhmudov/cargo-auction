@@ -4,13 +4,12 @@ from django.utils import timezone
 from django.db import models
 from django.contrib.auth.models import User
 
-
-class CustomUser(User):
-    class Meta:
-        proxy = True
-        app_label = 'auth'
-        verbose_name = (' ')
-        verbose_name_plural = ('Админы')
+# class CustomUser(User):
+#     class Meta:
+#         proxy = True
+#         app_label = 'auth'
+#         verbose_name = (' ')
+#         verbose_name_plural = ('Админы')
 
 
 class TgUser(models.Model):
@@ -22,6 +21,7 @@ class TgUser(models.Model):
     job_title = models.CharField(max_length=255, verbose_name='Должность')
     comment = models.TextField(verbose_name='Комментарий', null=True, blank=True)
     role_change_time = models.DateTimeField(null=True, blank=True, verbose_name='Последнее изменение роли')
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name='Создан')
 
     def save(self, *args, **kwargs):
         if self.role != self.__original_role:  # Check if role has changed

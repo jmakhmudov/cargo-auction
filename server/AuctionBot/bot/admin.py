@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import TgUser, Bet, Lot, CustomUser
+from .models import TgUser, Bet, Lot
 from django.contrib.auth.models import Group, User
 from django.urls import reverse
 from django.utils.html import format_html
@@ -7,16 +7,16 @@ from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django.utils.timesince import timesince
 
-class CustomUserAdmin(admin.ModelAdmin):
-    list_display = ('username', 'email', 'first_name', 'last_name', 'is_staff', 'last_login')
-    list_filter = ('username',)
-    search_fields = ('username', 'email',)
-
-
-
-
-admin.site.unregister(User)
-admin.site.register(CustomUser, CustomUserAdmin)
+# class CustomUserAdmin(admin.ModelAdmin):
+#     list_display = ('username', 'email', 'first_name', 'last_name', 'is_staff', 'last_login')
+#     list_filter = ('username',)
+#     search_fields = ('username', 'email',)
+#
+#
+#
+#
+#
+# admin.site.register(CustomUser, CustomUserAdmin)
 admin.site.unregister(Group)
 
 @admin.register(TgUser)
