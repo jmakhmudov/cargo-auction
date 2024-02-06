@@ -1,8 +1,8 @@
 
 const Parameter = ({ title, children }) => {
   return (
-    <div className="text-sm font-medium">
-      <span className="text-gray font-normal">{title}</span> {children}
+    <div className="text-sm font-normal">
+      <span className="font-medium text-blue">{title}</span> {children}
     </div>
   )
 }
