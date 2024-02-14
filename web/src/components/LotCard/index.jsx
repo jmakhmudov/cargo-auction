@@ -104,7 +104,7 @@ const LotCard = ({ lot }) => {
       </div>
 
       <section
-        className=" flex items-center justify-between"
+        className="flex items-center justify-between gap-2"
       >
         <div>
           <h2 className="text-2xl font-medium">
@@ -116,7 +116,7 @@ const LotCard = ({ lot }) => {
           </div>
         </div>
 
-        <div className="text-sm font-medium">
+        <div className="text-sm font-medium text-right">
           {
             timeLeft(lot.finish_date) === "Время торгов истекло" ?
               (checkWinner(snap, lot) ? "Вы победили" : "")
