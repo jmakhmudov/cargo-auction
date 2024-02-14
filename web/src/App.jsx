@@ -1,5 +1,6 @@
 import Navbar from "./components/Navbar";
 import { MdOutlineAccountCircle } from "react-icons/md";
+import { BiSupport } from "react-icons/bi";
 
 import { useSnapshot } from "valtio";
 import state from "./store";
@@ -46,7 +47,14 @@ const App = () => {
 
   return (
     <main>
-      <div className="font-bold text-lg flex items-center justify-between">
+      <a 
+        className="fixed top-0 left-0 w-full h-8 bg-blue flex items-center justify-center gap-2 text-white text-xs font-medium shadow-md cursor-pointer"
+        href="https://t.me/boburtalipov"
+      >
+        <BiSupport size={16}/>
+        Обратиться в поддержку
+      </a>
+      <div className="font-bold text-lg flex items-center justify-between mt-8">
         <div className="flex items-center gap-1">
           <MdOutlineAccountCircle size={30} />
           <div>
