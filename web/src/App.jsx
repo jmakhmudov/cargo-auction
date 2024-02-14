@@ -54,7 +54,10 @@ const App = () => {
           </div>
         </div>
 
-        <div className="font-normal text-sm">{getRole(snap.userData.role)}</div>
+        <div>
+          <div className="font-bold text-sm text-blue">{getRole(snap.userData.role)}</div>
+          <div className="text-xs font-normal">{snap.userData.name}</div>
+        </div>
       </div>
 
       <div
