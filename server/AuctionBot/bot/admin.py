@@ -26,6 +26,7 @@ class TgUserAdmin(admin.ModelAdmin):
     list_filter = ('role', 'comp_name',)
     search_fields = ('id', 'name', 'telephone_num', 'email', 'comp_name', 'job_title', 'role')
     exclude = ('role_change_time',)
+
 @admin.register(Bet)
 class BetAdmin(admin.ModelAdmin):
     list_display = ('id', 'amount', 'view_lot_link', 'view_user_link', 'created_at')

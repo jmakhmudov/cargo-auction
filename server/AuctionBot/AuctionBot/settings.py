@@ -22,7 +22,7 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
-
+    # 'admin_notification',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -30,10 +30,14 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'bot',
+    'notifications',
     'rest_framework',
     'corsheaders',
 
 ]
+
+# NOTIFICATION_MODEL = 'bot.TgUser'
+# ADMIN_SITE_BASE_URL = 'tg-adminchik/'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -149,7 +153,15 @@ SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 
 
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "static"),
-]
+    os.path.join(BASE_DIR, "static/admin"),
 
+]
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
+BOT_TOKEN = os.getenv('BOT_TOKEN')
 

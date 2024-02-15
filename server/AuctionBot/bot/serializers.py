@@ -14,7 +14,7 @@ class TgUserCheckSerializer(serializers.ModelSerializer):
     # Add TgUser
     class Meta:
         model = TgUser
-        fields = ('id', 'role')
+        fields = ('id','name', 'comp_name', 'role',)
 
 
 class BetSerializer(serializers.ModelSerializer):
