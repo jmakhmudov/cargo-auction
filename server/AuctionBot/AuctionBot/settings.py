@@ -22,7 +22,7 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
-    # 'admin_notification',
+    'admin_notification',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -36,8 +36,8 @@ INSTALLED_APPS = [
 
 ]
 
-# NOTIFICATION_MODEL = 'bot.TgUser'
-# ADMIN_SITE_BASE_URL = 'tg-adminchik/'
+NOTIFICATION_MODEL = 'bot.TgUser'
+ADMIN_SITE_BASE_URL = 'tg-adminchik/'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
