@@ -1,8 +1,12 @@
 from rest_framework import generics
-from .models import Notification
-from .serializers import NotificationSerializer
+from bot.models import TgUser
+from .serializers import ViewedUpdateSerializer, NotViewedUsersSerializer
 
+
+class NotificationUpdateAPIView(generics.UpdateAPIView):
+    queryset = TgUser.objects.all()
+    serializer_class = ViewedUpdateSerializer
 
 class NotificationList(generics.ListAPIView):
-    queryset = Notification.objects.filter(isViewed=False)
-    serializer_class = NotificationSerializer
+    queryset = TgUser.objects.filter(isViewed=False)
+    serializer_class = NotViewedUsersSerializer
