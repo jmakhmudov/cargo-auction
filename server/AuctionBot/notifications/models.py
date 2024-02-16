@@ -1,4 +1,5 @@
 from django.db import models
+from bot.models import TgUser
 
 class Announcements(models.Model):
     id = models.AutoField(primary_key=True)
@@ -10,3 +11,10 @@ class Announcements(models.Model):
     class Meta:
         verbose_name = ' '
         verbose_name_plural = 'Анонсы'
+
+
+class Notification(models.Model):
+    id = models.AutoField(primary_key=True)
+    user = models.ForeignKey(TgUser, on_delete=models.CASCADE)
+    isViewed = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)

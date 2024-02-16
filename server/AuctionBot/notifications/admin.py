@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Announcements
+from .models import Announcements, Notification
 @admin.register(Announcements)
 class AnnouncementsAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'created_at')
