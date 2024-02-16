@@ -12,16 +12,43 @@ async function getNotifications() {
   }
 }
 
-async function notifViewed(name) {
-  console.log('notifViewed', name)
+async function notifViewed(id, redirect) {
+  try {
+    await fetch(`/api/change-notifications-status/${id}/`, {
+      "credentials": "include",
+      "headers": {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:122.0) Gecko/20100101 Firefox/122.0",
+        "Accept": "text/html; q=1.0, */*",
+        "Accept-Language": "en-US,en;q=0.5",
+        "X-CSRFTOKEN": "QsgFIqc6vT8RumzEPsrsS8xZtKMIWuZMcNFC1waJP7Aw6Uc47vg1tw4gR7Opayt8",
+        "X-Requested-With": "XMLHttpRequest",
+        "Content-Type": "multipart/form-data; boundary=---------------------------69975712436964534872389691844",
+        "Sec-Fetch-Dest": "empty",
+        "Sec-Fetch-Mode": "cors",
+        "Sec-Fetch-Site": "same-origin"
+      },
+      "body": "-----------------------------69975712436964534872389691844\r\nContent-Disposition: form-data; name=\"isViewed\"\r\n\r\ntrue\r\n-----------------------------69975712436964534872389691844--\r\n",
+      "method": "PUT",
+      "mode": "cors"
+    });
+
+    if (redirect) {
+      window.location.href = `/tg-adminchik/bot/tguser/?q=${id}`;
+    }
+  } catch (error) {
+    console.log(error)
+  }
 }
 
-function viewAll() {
-  console.log('viewAll')
+async function viewAll(users) {
+  for (const user of users) {
+    await notifViewed(user.id, false);
+  }
+  window.location.reload()
 }
 
 document.addEventListener('DOMContentLoaded', async function () {
-  const notifications = [{ name: "Jaloliddin Makhmudov" }, { name: "joe black"}]
+  const notifications = await getNotifications()
   const notifNum = notifications.length
   const nav = document.createElement("div")
 
@@ -74,12 +101,12 @@ document.addEventListener('DOMContentLoaded', async function () {
     userDiv.style.width = "250px"
     userDiv.style.padding = "10px"
     userDiv.style.border = "solid var(--hairline-color) 1px"
+    userDiv.onclick = async () => await notifViewed(user.id, true)
+    userDiv.style.cursor = "pointer"
 
-    const link = document.createElement("a")
+    const link = document.createElement("p")
     link.innerHTML = `Новый пользователь <strong>${user.name}</strong>!`
-    link.onclick = () => notifViewed(user.id)
     link.style.color = "var(--body-quiet-color)"
-    link.href = "#"
 
     userDiv.append(link)
     infoBox.append(userDiv)
@@ -87,7 +114,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 
   const viewAllDiv = document.createElement("div")
   viewAllDiv.style.color = "var(--body-quiet-color)"
-  viewAllDiv.innerText = "Просмотреть всех"
+  viewAllDiv.innerText = "Очистить"
   viewAllDiv.style.textAlign = "center"
   viewAllDiv.style.width = "250px"
   viewAllDiv.style.padding = "4px 10px"
@@ -95,7 +122,7 @@ document.addEventListener('DOMContentLoaded', async function () {
   viewAllDiv.style.fontSize = "12px"
   viewAllDiv.style.backgroundColor = "var(--darkened-bg)"
   viewAllDiv.style.border = "solid var(--hairline-color) 1px"
-  viewAllDiv.onclick = () => viewAll()
+  viewAllDiv.onclick = async () => await viewAll(notifications)
 
   infoBox.append(viewAllDiv)
 
