@@ -1,0 +1,9 @@
+<!-- templates/admin/base.html -->
+{% extends 'admin/base.html' %}
+
+{% load static %}
+
+{% block extrahead %}
+{{ block.super }}
+<script src="{% static 'js/notification.js' %}"></script>
+{% endblock %}
