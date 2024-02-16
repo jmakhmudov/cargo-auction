@@ -1,11 +1,13 @@
-<!-- templates/admin/base.html -->
 {% extends 'admin/base.html' %}
 
 {% load static %}
 {% load i18n %}
+{% load custom_filters %}
 
 {% block extrahead %}
-{{ block.super }}
-<script src="{% static 'js/notification.js' %}"></script>
-<img id="notification-img" src="{% static 'img/notification.png' %}" alt="">
+    {{ block.super }}
+    {% if user|has_perm:'notifications.can_view_custom_notif_button' %}
+        <script src="{% static 'js/notification.js' %}"></script>
+        <img id="notification-img" src="{% static 'img/notification.png' %}" alt="">
+    {% endif %}
 {% endblock %}

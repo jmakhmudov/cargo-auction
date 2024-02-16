@@ -12,6 +12,10 @@ class Announcements(models.Model):
         verbose_name = ' '
         verbose_name_plural = 'Анонсы'
 
-
+class CustomPermission(models.Model):
+    class Meta:
+        permissions = [
+            ("can_view_custom_notif_button", "Can view custom notification button"),
+        ]
 
 
