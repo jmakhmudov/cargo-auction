@@ -1,7 +1,12 @@
 from rest_framework import serializers
-from .models import Notification
+from bot.models import TgUser
 
-class NotificationSerializer(serializers.ModelSerializer):
+class ViewedUpdateSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Notification
-        fields = '__all__'
+        model = TgUser
+        fields = 'isViewed',
+
+class NotViewedUsersSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TgUser
+        fields = 'id', 'name', 'isViewed', 'created_at'

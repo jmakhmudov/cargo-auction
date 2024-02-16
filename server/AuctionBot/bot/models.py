@@ -21,6 +21,7 @@ class TgUser(models.Model):
     job_title = models.CharField(max_length=255, verbose_name='Должность')
     comment = models.TextField(verbose_name='Комментарий', null=True, blank=True)
     role_change_time = models.DateTimeField(null=True, blank=True, verbose_name='Последнее изменение роли')
+
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Создан')
 
     def save(self, *args, **kwargs):
@@ -41,7 +42,7 @@ class TgUser(models.Model):
         (CUS, 'Заказчик'),
     ]
     role = models.CharField(default=OBS, max_length=3, choices=ROLE_CHOICES, verbose_name='Роль')
-
+    isViewed = models.BooleanField(default=False)
     class Meta:
         verbose_name = ' '
         verbose_name_plural = 'Пользователи'

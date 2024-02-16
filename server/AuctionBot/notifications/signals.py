@@ -5,7 +5,7 @@ from bot.models import Lot, TgUser, Bet
 from .models import Announcements
 from django.conf import settings
 import os
-from .models import Notification
+
 
 
 BOT_TOKEN = settings.BOT_TOKEN
@@ -102,11 +102,4 @@ def send_telegram_notification(sender, instance, created, **kwargs):
           print("No bets found for the specified lot.")
 
 
-#______govnocode______
-@receiver(post_save, sender=TgUser)
-def write_to_notification(sender, instance, created, **kwargs):
-    if created:
-        # Create a new Notification object and associate it with the TgUser instance
-        notification = Notification(user=instance)
-        notification.save()
 
