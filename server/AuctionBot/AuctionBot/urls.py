@@ -10,4 +10,5 @@ urlpatterns = [
     path('tg-adminchik/', admin.site.urls),
     # path('check/notification', check_notification_view, name="check_notifications"),
     path('', include('bot.urls')),
+    path('', include('notifications.urls')),
 ]
