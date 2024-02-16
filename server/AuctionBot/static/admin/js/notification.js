@@ -12,24 +12,28 @@ async function getNotifications() {
   }
 }
 
+function getCSRFToken() {
+  const cookies = document.cookie.split(';');
+  for (const cookie of cookies) {
+      const parts = cookie.split('=');
+      const name = parts[0].trim();
+      const value = parts[1];
+      if (name === 'csrftoken') {
+          return value;
+      }
+  }
+  return null;
+}
+
 async function notifViewed(id, redirect) {
   try {
     await fetch(`/api/change-notifications-status/${id}/`, {
-      "credentials": "include",
-      "headers": {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:122.0) Gecko/20100101 Firefox/122.0",
-        "Accept": "text/html; q=1.0, */*",
-        "Accept-Language": "en-US,en;q=0.5",
-        "X-CSRFTOKEN": "QsgFIqc6vT8RumzEPsrsS8xZtKMIWuZMcNFC1waJP7Aw6Uc47vg1tw4gR7Opayt8",
-        "X-Requested-With": "XMLHttpRequest",
-        "Content-Type": "multipart/form-data; boundary=---------------------------69975712436964534872389691844",
-        "Sec-Fetch-Dest": "empty",
-        "Sec-Fetch-Mode": "cors",
-        "Sec-Fetch-Site": "same-origin"
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': getCSRFToken()
       },
-      "body": "-----------------------------69975712436964534872389691844\r\nContent-Disposition: form-data; name=\"isViewed\"\r\n\r\ntrue\r\n-----------------------------69975712436964534872389691844--\r\n",
-      "method": "PUT",
-      "mode": "cors"
+      body: JSON.stringify({ isViewed: true })
     });
 
     if (redirect) {
