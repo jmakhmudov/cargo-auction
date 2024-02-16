@@ -33,7 +33,6 @@ INSTALLED_APPS = [
     'notifications',
     'rest_framework',
     'corsheaders',
-
 ]
 
 # NOTIFICATION_MODEL = 'bot.TgUser'
