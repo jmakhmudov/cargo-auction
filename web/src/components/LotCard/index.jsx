@@ -18,17 +18,38 @@ export const checkWinner = (snap, lot) => {
   return lot.last_bet?.user === snap.userData.id;
 }
 
-const LotCard = ({ lot }) => {
+const LotCard = (props) => {
   const snap = useSnapshot(state);
+  const [lot, setLot] = useState(props.lot);
   const [overlay, setOverlay] = useState(false);
   const [betData, setBetData] = useState({
-    amount: lot.last_bet === null ? lot.initial_bet : 0,
+    amount: lot.last_bet === null ? lot.initial_bet : lot.last_bet.amount - lot.step,
     comment: '',
     lot: lot.id,
     user: snap.userData.id
   });
   const [result, setResult] = useState(betData.amount);
   const [loading, setLoading] = useState(null);
+
+  const getLotData = async () => {
+    try {
+      const response = await axios.get(`/api/bot/active-lot/${lot.id}`);
+      setLot(response.data);
+    } catch (error) {
+      if (error.response && error.response.status === 404) {
+        try {
+          const expiredLotResponse = await axios.get(`/api/bot/expired-lot/${lot.id}`);
+          setLot(expiredLotResponse.data);
+        } catch (expiredLotError) {
+          console.error('Error getting expired lot data:', expiredLotError.message);
+          throw expiredLotError;
+        }
+      } else {
+        console.error('Error checking active lot data:', error.message);
+        throw error;
+      }
+    }
+  };
 
   const handleBet = async () => {
     console.log(betData)
@@ -45,34 +66,33 @@ const LotCard = ({ lot }) => {
             .then(res => res.data);
 
           if (liveLot.last_bet === null) {
-            if (betData.amount === '' || betData.amount === liveLot.initial_bet && betData.amount >= 0) {
-              betData.amount = liveLot.initial_bet;
+            setBetData(prevState => ({
+              ...prevState,
+              amount: liveLot.initial_bet
+            }));
 
-              await axios.post('/api/bot/bet-create/', betData);
-              setResult(`${betData.amount} ${lot.currency}`);
-              setLoading(false);
-            } else if (betData.amount <= liveLot.initial_bet && betData.amount >= 0) {
-              await axios.post('/api/bot/bet-create/', betData);
-              setResult(`${betData.amount} ${lot.currency}`);
-              setLoading(false);
-            } else {
-              setLoading(false);
-              setResult("Ваша ставка больше начальной ставки");
-            }
+            await axios.post('/api/bot/bet-create/', betData);
+            setResult(`${betData.amount} ${lot.currency}`);
+            setLoading(false);
           } else {
             const lastBetAmount = liveLot.last_bet.amount ?? liveLot.initial_bet;
 
             if (betData.amount < lastBetAmount && betData.amount >= 0) {
+              setBetData(prevState => ({
+                ...prevState,
+                amount: liveLot.last_bet.amount - liveLot.step * 2
+              }));
               await axios.post('/api/bot/bet-create/', betData);
-              setLoading(false);
               setResult(`${betData.amount} ${lot.currency}`);
-            } else if (betData.amount < 0) {
               setLoading(false);
-              setResult("Ваша ставка должна быть больше 0");
             }
             else {
+              setBetData(prevState => ({
+                ...prevState,
+                amount: liveLot.last_bet.amount - liveLot.step
+              }));
               setLoading(false);
-              setResult("Ваша ставка должна быть меньше текущей ставки");
+              setResult("Ставка изменилась");
             }
           }
           getLotData();
@@ -92,10 +112,10 @@ const LotCard = ({ lot }) => {
         <div className=" bg-white px-16 py-10 rounded-md grid place-items-center text-center">
           {
             loading ? <Loading /> : (
-              result === `${betData.amount} ${lot.currency}` ?
-                <IoIosCheckmarkCircle size={80} color="#3476AB" />
-                :
+              result === "Ставка изменилась" ?
                 <PiXCircleFill size={80} color="#AB3434" />
+                :
+                <IoIosCheckmarkCircle size={80} color="#3476AB" />
             )
 
           }
@@ -169,24 +189,12 @@ const LotCard = ({ lot }) => {
           <></>
           :
           <section className="flex gap-2">
-            <input
-              type="number"
-              placeholder={`Сумма в ${lot.currency}`}
-              className="font-normal w-32"
-              min={lot.initial_bet}
-              onChange={(e) => setBetData(prevState => {
-                return {
-                  ...prevState,
-                  amount: e.target.value
-                }
-              })}
-            />
             <button
               className={`w-full font-bold bg-blue text-white py-2 rounded-md ${(snap.userData.role === 'OBS' || timeLeft(lot.finish_date) === "Время торгов истекло") ? 'opacity-50' : 'opacity-100'}`}
               onClick={handleBet}
               disabled={snap.userData.role === 'OBS' || timeLeft(lot.finish_date) === "Время торгов истекло"}
             >
-              Сделать ставку
+              Сделать ставку &#8226; {amountFormat(betData.amount)} {lot.currency}
             </button>
           </section>
       }
