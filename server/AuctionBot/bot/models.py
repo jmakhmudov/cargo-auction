@@ -90,6 +90,7 @@ class Lot(models.Model):
         (JPY, 'Японская иена'),
     ]
 
+    setep = models.IntegerField(verbose_name='Шаг ставки', default=10, help_text="Интервал ставок - по умолчанию 10 у.е")
     del_time = models.IntegerField(verbose_name='Срок доставки (Дни)',)
     initial_bet = models.FloatField(verbose_name='Начальная ставка')
     currency = models.CharField(max_length=3, choices=CURRENCY_CHOICES, verbose_name='Валюта')
