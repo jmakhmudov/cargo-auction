@@ -43,9 +43,13 @@ class TgUser(models.Model):
     ]
     role = models.CharField(default=OBS, max_length=3, choices=ROLE_CHOICES, verbose_name='Роль')
     isViewed = models.BooleanField(default=False)
+
     class Meta:
         verbose_name = ' '
         verbose_name_plural = 'Пользователи'
+
+    def __str__(self):
+        return f"{self.name}  ID{self.id}"
 
 
 class Lot(models.Model):
@@ -95,6 +99,7 @@ class Lot(models.Model):
     initial_bet = models.FloatField(verbose_name='Начальная ставка')
     currency = models.CharField(max_length=3, choices=CURRENCY_CHOICES, verbose_name='Валюта')
     is_cancelled = models.BooleanField(default=False, verbose_name='Отменен')
+    allowed_users = models.ManyToManyField(TgUser, null=True, blank=True,)
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Создан')
 
 
@@ -102,6 +107,8 @@ class Lot(models.Model):
     class Meta:
         verbose_name = ' '
         verbose_name_plural = 'Лоты'
+
+
 
 
 class Bet(models.Model):
