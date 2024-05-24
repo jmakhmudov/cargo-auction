@@ -17,12 +17,13 @@ const SoldLots = () => {
 
   useEffect(() => {
     axios.get('/api/bot/expired-lots', {
-      headers: {  // Fix the typo in "headers"
+      headers: {
         Accept: 'application/json'
       }
     })
       .then(res => {
-        setLots(res.data);
+        const lots = res.data.filter(shipment => shipment.allowed_users.includes(snap.tgUser.id));
+        setLots(lots);
         setLoading(false);
       })
       .catch(error => {

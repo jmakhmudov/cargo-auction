@@ -6,6 +6,8 @@ require('dotenv').config();
 const bot = new Telegraf(process.env.BOT_TOKEN);
 bot.use(session());
 
+const API_URL = process.env.API_URL;
+
 
 function isValidEmail(email) {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -127,7 +129,7 @@ bot.on('text', async (ctx) => {
 // Функция проверки регистрации пользователя
 async function checkReg(id) {
   try {
-    const response = await axios.get(`https://ovestellar.pythonanywhere.com/api/bot/tguser/${id}`);
+    const response = await axios.get(`${API_URL}api/bot/tguser/${id}`);
 
     return response.data;
   } catch (error) {
@@ -166,7 +168,7 @@ bot.action('edit', async (ctx) => {
 // Функция отправки данных по API
 async function sendRegistrationData(data) {
   delete data.step;
-  const apiUrl = 'https://ovestellar.pythonanywhere.com/api/bot/tguser-create/';
+  const apiUrl = `${API_URL}api/bot/tguser-create/`;
   console.log(data);
   // Отправка данных с использованием axios
   await axios.post(apiUrl, data);
@@ -207,8 +209,4 @@ const getRegistrationSummary = (data) => {
   return summary;
 };
 
-exports.telegramBot = functions.https.onRequest(async (request, response) => {
-  return await bot.handleUpdate(request.body, response).then((rv) => {
-    return !rv && response.sendStatus(200);
-  });
-});
+bot.launch();
