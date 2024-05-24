@@ -155,6 +155,7 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static/admin"),
 
 ]
+
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
@@ -164,3 +165,10 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 BOT_TOKEN = os.getenv('BOT_TOKEN')
 
+CELERY_BROKER_URL = 'redis://redis:6379/0'
+CELERY_RESULT_BACKEND = 'redis://redis:6379/1'
+
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'Asia/Tashkent'

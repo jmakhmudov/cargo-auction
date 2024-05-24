@@ -54,15 +54,19 @@ def send_push_img_notification(id, message, img_url=None):
         print("Telegram message sent successfully.")
     except requests.exceptions.RequestException as e:
         print(f"Error sending Telegram message: {e}")
+from django.db.models.signals import m2m_changed
 
-@receiver(post_save, sender=Lot)
-def send_lot_notification(sender, instance, created, **kwargs):
-    if created:
-        all_client_ids = get_all_client_ids()
+
+@receiver(m2m_changed, sender=Lot.allowed_users.through)
+def send_lot_notification(sender, instance, action, **kwargs):
+    if action == "post_add":
+        all_client_ids = instance.allowed_users.values_list('id', flat=True)
+        print(all_client_ids)
         message = (f"<b>‼️Появился новый лот!</b>\n\nЛот <b>{instance.name}</b> был только что добавлен\n"
                    f"<b>Начало торгов</b> - {instance.start_date}")
         for id in all_client_ids:
             send_push_notification(id, message)
+
 
 @receiver(post_save, sender=Announcements)
 def send_announcement_notification(sender, instance, created, **kwargs):
@@ -90,16 +94,11 @@ def send_telegram_notification(sender, instance, created, **kwargs):
         else:
           print("No bets found for the specified lot.")
 
-@receiver(post_save, sender=Bet)
-def send_telegram_notification(sender, instance, created, **kwargs):
-    if created:
-        last_bet = get_last_bet(instance.lot.id)
-        if last_bet:
-          message = (f"<b>‼️ Ваша ставка <i>{last_bet.amount} {last_bet.lot.currency}</i> на лот "
-                     f"<i>{instance.lot.name} - #{last_bet.lot_id}</i> перебита</b>")
-          send_push_notification(last_bet.user.id, message)
-        else:
-          print("No bets found for the specified lot.")
+
+def send_notification_to_winner(winner, lot):
+    message = f"<b>‼️ Вы победили в лоте <i>{lot.name}, #{lot.id}</i>"
+    send_push_notification(winner, message)
+
 
 
 
