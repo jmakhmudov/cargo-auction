@@ -6,5 +6,40 @@ services:
     command: python manage.py runserver 0.0.0.0:8000
     volumes:
       - .:/app
+    environment:
+      - TZ=Asia/Tashkent
     ports:
       - "8000:8000"
+
+  redis:
+    image: redis:latest
+    environment:
+      - TZ=Asia/Tashkent
+    restart: always
+
+
+  celery_worker:
+    build: .
+    command: celery -A AuctionBot worker -Q default --loglevel=info
+    volumes:
+      - .:/app
+    environment:
+      - TZ=Asia/Tashkent
+    depends_on:
+      - redis
+    restart: always
+
+  celery_beat:
+    build: .
+    command: celery -A AuctionBot beat --loglevel=info
+    volumes:
+      - .:/app
+    environment:
+      - TZ=Asia/Tashkent
+    depends_on:
+      - redis
+    restart: always
+
+
+volumes:
+  static_volume:

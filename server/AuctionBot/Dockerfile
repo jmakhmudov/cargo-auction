@@ -17,7 +17,7 @@ COPY requirements.txt /app/
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the rest of the application code into the container
-COPY .. /app/
+COPY . /app/
 RUN python manage.py collectstatic --no-input
 
 ADD entrypoint.sh /entrypoint.sh

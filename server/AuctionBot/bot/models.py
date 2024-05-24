@@ -99,16 +99,12 @@ class Lot(models.Model):
     initial_bet = models.FloatField(verbose_name='Начальная ставка')
     currency = models.CharField(max_length=3, choices=CURRENCY_CHOICES, verbose_name='Валюта')
     is_cancelled = models.BooleanField(default=False, verbose_name='Отменен')
-    allowed_users = models.ManyToManyField(TgUser, null=True, blank=True,)
+    allowed_users = models.ManyToManyField(TgUser)
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Создан')
-
-
 
     class Meta:
         verbose_name = ' '
         verbose_name_plural = 'Лоты'
-
-
 
 
 class Bet(models.Model):
