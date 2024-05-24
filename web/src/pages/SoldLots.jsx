@@ -4,8 +4,11 @@ import axios from "axios";
 import LotCard from "../components/LotCard";
 import Loading from "../components/ui/loading";
 import Empty from "../components/ui/empty";
+import { useSnapshot } from "valtio";
+import state from "../store";
 
 const SoldLots = () => {
+  const snap = useSnapshot(state);
   const [lots, setLots] = useState([]);
   const [filteredLots, setFilteredLots] = useState([]);
   const [loading, setLoading] = useState(true);
