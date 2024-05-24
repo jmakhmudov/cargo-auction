@@ -13,7 +13,6 @@ class TgUserView(generics.RetrieveAPIView):
 class TgUserCreateView(generics.CreateAPIView):
     serializer_class = TgUserSerializer
 
-
 class LotView(generics.RetrieveAPIView):
     serializer_class = LotSerializer
 
@@ -49,7 +48,6 @@ class LotList(generics.ListAPIView):
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
 
-
 class ExpiredLotList(generics.ListAPIView):
     serializer_class = LotSerializer
 
@@ -61,13 +59,12 @@ class ExpiredLotList(generics.ListAPIView):
         queryset = self.get_queryset()
         for lot in queryset:
             try:
-                lot.last_bet = lot.bets.latest('created_at')  # Attempt to retrieve last bet
+                lot.last_bet = lot.bets.latest('created_at')
             except Bet.DoesNotExist:
-                lot.last_bet = None  # Set to None if no bets exist
-            lot.total_bets = lot.bets.count()  # Calculate total bets
+                lot.last_bet = None
+            lot.total_bets = lot.bets.count()
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
-
 
 class ExpiredLotView(generics.RetrieveAPIView):
     serializer_class = LotSerializer

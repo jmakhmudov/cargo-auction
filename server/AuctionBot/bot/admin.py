@@ -73,6 +73,7 @@ class LotAdmin(admin.ModelAdmin):
     list_filter = ('start_date', 'finish_date', IsActiveFilter, 'is_cancelled',)
     search_fields = ('id', 'start_date', 'finish_date', 'departure', 'destination', 'initial_bet')
     exclude = ('is_cancelled',)
+    filter_horizontal = ("allowed_users",)
 
     def lot_winner_link(self, obj):
         if not obj.is_cancelled and obj.finish_date <= timezone.now():
