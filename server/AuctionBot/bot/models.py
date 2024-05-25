@@ -49,7 +49,7 @@ class TgUser(models.Model):
         verbose_name_plural = 'Пользователи'
 
     def __str__(self):
-        return f"{self.name}  ID{self.id}"
+        return f"{self.name}  ({self.comp_name})"
 
 
 class Lot(models.Model):
@@ -99,7 +99,8 @@ class Lot(models.Model):
     initial_bet = models.FloatField(verbose_name='Начальная ставка')
     currency = models.CharField(max_length=3, choices=CURRENCY_CHOICES, verbose_name='Валюта')
     is_cancelled = models.BooleanField(default=False, verbose_name='Отменен')
-    allowed_users = models.ManyToManyField(TgUser)
+    allowed_users = models.ManyToManyField(TgUser, verbose_name='Пользователи',
+                                           help_text="Выберите пользователей допущенных до Лота")
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Создан')
 
     class Meta:
