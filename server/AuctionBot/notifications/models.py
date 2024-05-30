@@ -1,4 +1,5 @@
 from django.db import models
+from bot.models import TgUser
 
 
 class Announcements(models.Model):
@@ -7,6 +8,8 @@ class Announcements(models.Model):
     message_text = models.TextField(verbose_name='Текст')
     img = models.ImageField(verbose_name=("Картинка"), blank=True, null=True, upload_to='images/')
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Создан')
+    allowed_users = models.ManyToManyField(TgUser, verbose_name='Пользователи',
+                                           help_text="Выберите пользователей допущенных до Объявления")
 
     class Meta:
         verbose_name = ' '

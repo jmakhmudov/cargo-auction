@@ -68,10 +68,10 @@ def send_lot_notification(sender, instance, action, **kwargs):
             send_push_notification(id, message)
 
 
-@receiver(post_save, sender=Announcements)
-def send_announcement_notification(sender, instance, created, **kwargs):
-    if created:
-        all_client_ids = get_all_client_ids()
+@receiver(m2m_changed, sender=Announcements.allowed_users.through)
+def send_announcement_notification(sender, instance, action, **kwargs):
+    if action == "post_add":
+        all_client_ids = instance.allowed_users.values_list('id', flat=True)
         img_url = instance.img.path if instance.img else None
         message = instance.message_text
 
