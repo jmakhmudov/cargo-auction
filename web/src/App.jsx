@@ -49,7 +49,7 @@ const App = () => {
     <main>
       <a 
         className="fixed top-0 left-0 right-0 w-full h-8 bg-blue flex items-center justify-center gap-2 text-white text-xs font-medium shadow-md cursor-pointer"
-        href="https://t.me/boburtalipov"
+        href="https://t.me/Xamidoff"
       >
         <BiSupport size={16}/>
         Обратиться в поддержку
