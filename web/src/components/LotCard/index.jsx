@@ -75,7 +75,7 @@ const LotCard = (props) => {
             setResult(`${betData.amount} ${lot.currency}`);
             setLoading(false);
           } else {
-            const lastBetAmount = liveLot.last_bet.amount ?? liveLot.initial_bet;
+            const lastBetAmount = liveLot.last_bet.amount ?? liveLoct.initial_bet;
 
             if (betData.amount < lastBetAmount && betData.amount >= 0) {
               setBetData(prevState => ({

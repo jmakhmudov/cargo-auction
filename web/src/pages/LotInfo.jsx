@@ -19,21 +19,34 @@ import { getUserData } from "../App";
 import { checkWinner } from "../components/LotCard";
 import Loading from "../components/ui/loading";
 
+import { CiCirclePlus, CiCircleMinus } from "react-icons/ci";
+
 const LotInfo = () => {
   const snap = useSnapshot(state);
   const [lot, setLot] = useState(snap.currentLot);
   const [refreshCount, setRefreshCount] = useState(0);
   const [isRotating, setIsRotating] = useState(false);
   const [overlay, setOverlay] = useState(false);
+  const [step, setStep] = useState(1);
   const [betData, setBetData] = useState({
-    amount: lot.last_bet === null ? lot.initial_bet : lot.last_bet.amount - lot.step,
+    amount: lot.last_bet === null ? lot.initial_bet : lot.last_bet.amount - (lot.step * step),
     comment: '',
     lot: lot.id,
     user: snap.userData.id
   });
-  console.log(betData)
+  console.log(betData, lot.last_bet.amount - (lot.step * step))
   const [result, setResult] = useState(betData.amount);
   const [loading, setLoading] = useState(null)
+
+  useEffect(() => {
+    const bet_amount = lot.last_bet.amount - (lot.step * step);
+    if (bet_amount >= 0) {
+      setBetData({
+        ...betData,
+        amount: bet_amount,
+      })
+    }
+  }, [step])
 
   useEffect(() => {
     const fetchData = async () => {
@@ -238,8 +251,34 @@ const LotInfo = () => {
               })}
             />
 
+
+            <div className="w-full">
+              <div className="font-semibold text-sm text-left mb-2">Шаг ({lot.step} {lot.currency})</div>
+              <div className="flex items-center gap-2 w-full">
+                <button
+                  className="font-bold select-none bg-gray bg-opacity-50 active:bg-opacity-100 text-black py-2 rounded-md w-full"
+                  onClick={() => {
+                    if (step > 1) {
+                      setStep(step - 1);
+                    }
+                  }}
+                >-</button>
+                <div className="select-none font-bold">{step}</div>
+                <button
+                  className="font-bold select-none bg-gray bg-opacity-50 active:bg-opacity-100 text-black py-2 rounded-md w-full"
+                  onClick={() => {
+                    const bet_amount = lot.last_bet.amount - (lot.step * step)
+                    if (bet_amount >= 0) {
+                      setStep(step + 1);
+                    }
+                  }}
+                >+</button>
+
+              </div>
+            </div>
+
             <button
-              className={`font-bold bg-blue text-white py-2 rounded-md ${(snap.userData.role === 'OBS' || timeLeft(lot.finish_date) === "Время торгов истекло") ? 'opacity-50' : 'opacity-100'}`}
+              className={`font-bold select-none bg-blue text-white py-2 rounded-md ${(snap.userData.role === 'OBS' || timeLeft(lot.finish_date) === "Время торгов истекло") ? 'opacity-50' : 'opacity-100'}`}
               onClick={handleBet}
               disabled={snap.userData.role === 'OBS' || timeLeft(lot.finish_date) === "Время торгов истекло"}
             >
