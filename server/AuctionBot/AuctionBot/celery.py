@@ -13,7 +13,7 @@ app.config_from_object('django.conf:settings', namespace='CELERY')
 app.conf.beat_schedule = {
     'every_minute': {
         'task': 'notifications.tasks.check_lot_status',
-        'schedule': crontab(minute="*/1")
+        'schedule': crontab(minute="*/3")
 
     }
 }

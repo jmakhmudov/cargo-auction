@@ -20,7 +20,7 @@ services:
 
   celery_worker:
     build: .
-    command: celery -A AuctionBot worker -Q default --loglevel=info
+    command: celery -A AuctionBot worker -l info
     volumes:
       - .:/app
     environment:

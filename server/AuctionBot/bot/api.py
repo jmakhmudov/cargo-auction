@@ -85,4 +85,5 @@ class ExpiredLotView(generics.RetrieveAPIView):
 
 
 class BetCreateView(generics.CreateAPIView):
+    queryset = Bet.objects.all()
     serializer_class = BetSerializer

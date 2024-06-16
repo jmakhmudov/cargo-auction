@@ -1,5 +1,7 @@
 from rest_framework import serializers
 from .models import TgUser, Lot, Bet
+from django.utils import timezone
+from datetime import timedelta
 
 
 class TgUserSerializer(serializers.ModelSerializer):
@@ -17,10 +19,20 @@ class TgUserCheckSerializer(serializers.ModelSerializer):
 
 
 class BetSerializer(serializers.ModelSerializer):
-    # Add Bet
     class Meta:
         model = Bet
         fields = '__all__'
+
+    def create(self, validated_data):
+        bet = super().create(validated_data)
+        lot = bet.lot
+        current_time = timezone.now()
+
+        if lot.finish_date - timedelta(minutes=5) <= current_time <= lot.finish_date:
+            lot.finish_date += timedelta(minutes=3)
+            lot.save()
+
+        return bet
 
 
 class LotSerializer(serializers.ModelSerializer):
