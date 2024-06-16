@@ -34,17 +34,19 @@ const LotInfo = () => {
     lot: lot.id,
     user: snap.userData.id
   });
-  console.log(betData, lot.last_bet.amount - (lot.step * step))
+  console.log(betData)
   const [result, setResult] = useState(betData.amount);
   const [loading, setLoading] = useState(null)
 
   useEffect(() => {
-    const bet_amount = lot.last_bet.amount - (lot.step * step);
-    if (bet_amount >= 0) {
-      setBetData({
-        ...betData,
-        amount: bet_amount,
-      })
+    if (lot.last_bet) {
+      const bet_amount = lot.last_bet.amount - (lot.step * step);
+      if (bet_amount >= 0) {
+        setBetData({
+          ...betData,
+          amount: bet_amount,
+        })
+      }
     }
   }, [step])
 
@@ -252,30 +254,40 @@ const LotInfo = () => {
             />
 
 
-            <div className="w-full">
-              <div className="font-semibold text-sm text-left mb-2">Шаг ({lot.step} {lot.currency})</div>
-              <div className="flex items-center gap-2 w-full">
-                <button
-                  className="font-bold select-none bg-gray bg-opacity-50 active:bg-opacity-100 text-black py-2 rounded-md w-full"
-                  onClick={() => {
-                    if (step > 1) {
-                      setStep(step - 1);
-                    }
-                  }}
-                >-</button>
-                <div className="select-none font-bold">{step}</div>
-                <button
-                  className="font-bold select-none bg-gray bg-opacity-50 active:bg-opacity-100 text-black py-2 rounded-md w-full"
-                  onClick={() => {
-                    const bet_amount = lot.last_bet.amount - (lot.step * step)
-                    if (bet_amount >= 0) {
-                      setStep(step + 1);
-                    }
-                  }}
-                >+</button>
+            {
+              lot.last_bet &&
+              <div className="w-full">
+                <div className="font-semibold text-sm text-left mb-2">Шаг ({lot.step} {lot.currency})</div>
+                <div className="flex items-center gap-2 w-full">
+                  <button
+                    className="font-bold select-none bg-gray bg-opacity-50 active:bg-opacity-100 text-black py-2 rounded-md w-full"
+                    onClick={() => {
+                      if (step > 1) {
+                        setStep(step - 1);
+                      }
+                    }}
+                  >-</button>
+                  <div className="select-none font-bold">{step}</div>
+                  <button
+                    className="font-bold select-none bg-gray bg-opacity-50 active:bg-opacity-100 text-black py-2 rounded-md w-full"
+                    onClick={() => {
+                      const bet_amount = lot.last_bet.amount - (lot.step * step)
+                      if (bet_amount >= 0) {
+                        setStep(step + 1);
+                      }
+                    }}
+                  >+</button>
 
+                </div>
               </div>
-            </div>
+
+            }
+
+            {/* <dialog>
+              <button autofocus>Close</button>
+              <p>This modal dialog has a groovy backdrop!</p>
+            </dialog>
+            <button>Show the dialog</button> */}
 
             <button
               className={`font-bold select-none bg-blue text-white py-2 rounded-md ${(snap.userData.role === 'OBS' || timeLeft(lot.finish_date) === "Время торгов истекло") ? 'opacity-50' : 'opacity-100'}`}
