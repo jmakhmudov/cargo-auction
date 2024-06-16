@@ -17,7 +17,7 @@ def get_all_client_ids():
 
 def get_last_bet(lot_id):
     try:
-        last_bet = Bet.objects.filter(lot_id=lot_id).order_by('-created_at')[1]
+        last_bet = Bet.objects.filter(lot_id=lot_id).order_by('-created_at')[0]
         return last_bet
     except IndexError:
         return None
@@ -32,6 +32,7 @@ def send_push_notification(id, message):
         'parse_mode': 'HTML',
     }
     telegram_api_url = f'https://api.telegram.org/bot{BOT_TOKEN}/sendMessage'
+    print(payload)
     try:
         response = requests.post(telegram_api_url, json=payload)
         response.raise_for_status()
@@ -96,7 +97,8 @@ def send_telegram_notification(sender, instance, created, **kwargs):
 
 
 def send_notification_to_winner(winner, lot):
-    message = f"<b>‼️ Вы победили в лоте <i>{lot.name}, #{lot.id}</i>"
+    message = f"<b>🏆🏆🏆️ Вы победили в лоте <i>{lot.name}, #{lot.id}</i></b>"
+    print(message)
     send_push_notification(winner, message)
 
 
