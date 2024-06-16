@@ -17,7 +17,8 @@ def get_all_client_ids():
 
 def get_last_bet(lot_id):
     try:
-        last_bet = Bet.objects.filter(lot_id=lot_id).order_by('-created_at')[0]
+        last_bet = Bet.objects.filter(lot_id=lot_id).order_by('-created_at')[1]
+
         return last_bet
     except IndexError:
         return None
@@ -87,17 +88,19 @@ def send_announcement_notification(sender, instance, action, **kwargs):
 @receiver(post_save, sender=Bet)
 def send_telegram_notification(sender, instance, created, **kwargs):
     if created:
+        current_bet = Bet.objects.filter(lot_id=instance.lot.id).order_by('-created_at').first()
+
         last_bet = get_last_bet(instance.lot.id)
-        if last_bet:
-          message = (f"<b>‼️ Ваша ставка <i>{last_bet.amount} {last_bet.lot.currency}</i> на лот "
-                     f"<i>{instance.lot.name} - #{last_bet.lot_id}</i> перебита</b>")
-          send_push_notification(last_bet.user.id, message)
+        if last_bet and current_bet.user.id != last_bet.user.id:
+            message = (f"<b>‼️ Ваша ставка <i>{last_bet.amount} {last_bet.lot.currency}</i> на лот "
+                        f"<i>{instance.lot.name} - #{last_bet.lot_id}</i> перебита</b>")
+            send_push_notification(last_bet.user.id, message)
         else:
           print("No bets found for the specified lot.")
 
 
 def send_notification_to_winner(winner, lot):
-    message = f"<b>🏆🏆🏆️ Вы победили в лоте <i>{lot.name}, #{lot.id}</i></b>"
+    message = f"<b>🏆️🏆🏆 Вы победили в лоте <i>{lot.name}, #{lot.id}</i></b>"
     print(message)
     send_push_notification(winner, message)
 
