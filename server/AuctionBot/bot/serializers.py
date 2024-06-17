@@ -28,8 +28,8 @@ class BetSerializer(serializers.ModelSerializer):
         lot = bet.lot
         current_time = timezone.now()
 
-        if lot.finish_date - timedelta(minutes=5) <= current_time <= lot.finish_date:
-            lot.finish_date += timedelta(minutes=3)
+        if lot.finish_date - timedelta(minutes=3) <= current_time <= lot.finish_date:
+            lot.finish_date += timedelta(minutes=1)
             lot.save()
 
         return bet
